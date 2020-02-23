@@ -255,5 +255,59 @@ namespace SCPDiscord
 				}).ToArray()
 			});
 		}
+
+		public void OnFemurEnter(FemurEnterEvent ev)
+		{
+			tcp.SendData(new Player
+			{
+				eventName = "FemurEnter",
+				player = new User
+				{
+					name = ev.Player.nicknameSync.Network_myNickSync,
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+				}
+			});
+		}
+
+		public void OnScp106Contain(Scp106ContainEvent ev)
+		{
+			// 'player' is the player who hit the button, not 106
+			tcp.SendData(new Player
+			{
+				eventName = "Scp106Contain",
+				player = new User
+				{
+					name = ev.Player.nicknameSync.Network_myNickSync,
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+				}
+			});
+		}
+
+		public void OnScp914Activation(ref Scp914ActivationEvent ev)
+		{
+			tcp.SendData(new Player
+			{
+				eventName = "Scp914Activation",
+				player = new User
+				{
+					name = ev.Player.nicknameSync.Network_myNickSync,
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+				}
+			});
+		}
+
+		public void OnSetGroup(SetGroupEvent ev)
+		{
+			tcp.SendData(new PlayerParameter
+			{
+				eventName = "SetGroup",
+				player = new User
+				{
+					name = ev.Player.nicknameSync.Network_myNickSync,
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+				},
+				parameter = ev.Group.BadgeText
+			});
+		}
 	}
 }

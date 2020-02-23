@@ -26,6 +26,10 @@ namespace SCPDiscord
 			Events.Scp079TriggerTeslaEvent += ev.OnScp079TriggerTesla;
 			Events.Scp914KnobChangeEvent += ev.OnScp914ChangeKnob;
 			Events.TeamRespawnEvent += ev.OnTeamRespawn;
+			Events.FemurEnterEvent += ev.OnFemurEnter;
+			Events.Scp106ContainEvent += ev.OnScp106Contain;
+			Events.Scp914ActivationEvent += ev.OnScp914Activation;
+			Events.SetGroupEvent += ev.OnSetGroup;
 		}
 
 		public override void OnDisable()
