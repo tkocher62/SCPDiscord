@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configs.cs" />
     <Compile Include="DataObjects\RoleSync.cs" />
     <Compile Include="DataObjects\Update.cs" />
     <Compile Include="DataObjects\Events\TeamRespawn.cs" />

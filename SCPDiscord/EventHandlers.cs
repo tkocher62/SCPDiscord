@@ -1,6 +1,5 @@
 ﻿using EXILED;
 using MEC;
-using Newtonsoft.Json;
 using SCPDiscord.DataObjects;
 using SCPDiscord.DataObjects.Events;
 using System.Linq;
@@ -13,12 +12,16 @@ namespace SCPDiscord
 
 		public EventHandlers()
 		{
-			tcp = new Tcp("127.0.0.1", 8080);
+			Configs.ReloadConfigs();
+
+			tcp = new Tcp("127.0.0.1", Configs.port);
 			tcp.Init();
 		}
 
 		public void OnWaitingForPlayers()
 		{
+			Configs.ReloadConfigs();
+
 			tcp.SendData(new Generic
 			{
 				eventName = "WaitingForPlayers"
