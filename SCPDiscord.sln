@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29609.76
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCPDiscord", "SCPDiscord\SCPDiscord.csproj", "{A48FB7B0-0D06-4E46-9290-7AFE1C92191D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A48FB7B0-0D06-4E46-9290-7AFE1C92191D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A48FB7B0-0D06-4E46-9290-7AFE1C92191D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A48FB7B0-0D06-4E46-9290-7AFE1C92191D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A48FB7B0-0D06-4E46-9290-7AFE1C92191D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {95031C00-7021-4C9D-A472-D9A58E3F0D6A}
+	EndGlobalSection
+EndGlobal
