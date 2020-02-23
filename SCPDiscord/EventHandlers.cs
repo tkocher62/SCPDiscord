@@ -1,4 +1,5 @@
 ﻿using EXILED;
+using MEC;
 using Newtonsoft.Json;
 using SCPDiscord.DataObjects;
 using SCPDiscord.DataObjects.Events;
@@ -43,10 +44,10 @@ namespace SCPDiscord
 
 		public void OnPlayerJoin(PlayerJoinEvent ev)
 		{
-			tcp.SendData(new RoleSync
+			Timing.CallDelayed(1f, () => tcp.SendData(new RoleSync
 			{
 				userid = ev.Player.characterClassManager.UserId
-			});
+			}));
 
 			tcp.SendData(new Player
 			{

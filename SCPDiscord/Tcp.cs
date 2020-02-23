@@ -84,7 +84,7 @@ namespace SCPDiscord
 
 						if (o["group"] == null)
 						{
-							Log.Info($"No role sync found for {userid}");
+							Log.Debug($"No role sync found for {userid}");
 							Plugin.VerifyReservedSlot(userid);
 							continue;
 						}

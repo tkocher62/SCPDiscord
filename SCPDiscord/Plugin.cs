@@ -26,7 +26,7 @@ namespace SCPDiscord
 
 		public static void VerifyReservedSlot(string userid)
 		{
-			Log.Debug($"Role sync found for {userid}. Checking reserved slots status...");
+			Log.Debug($"Verifying reserved slots statusfor {userid}...");
 			List<string> lines = File.ReadAllLines(reservedSlots).ToList();
 			for (int i = 0; i < lines.Count; i++)
 			{
