@@ -1,9 +1,11 @@
 ﻿using EXILED;
+using EXILED.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SCPDiscord.DataObjects;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -72,6 +74,62 @@ namespace SCPDiscord
 					{
 						if ((string)o["data"] == "PASS") Log.Debug($"Server {ServerConsole.Port} passed identification.");
 						else if ((string)o["data"] == "FAIL") Log.Warn($"Server {ServerConsole.Port} failed identification.");
+					}
+					else if (type == "UPDATE")
+					{
+						SendData(JsonConvert.SerializeObject(new Update()));
+					}
+					else if (type == "ROLESYNC")
+					{
+						string userid = $"{(string)o["userid"]}@steam";
+
+						if (o["group"] == null)
+						{
+							Log.Info($"No role sync found for {userid}");
+							Plugin.VerifyReservedSlot(userid);
+							continue;
+						}
+
+						string group = (string)o["group"];
+
+						UserGroup userGroup = ServerStatic.PermissionsHandler.GetGroup((string)o["group"]);
+						if (userGroup == null)
+						{
+							Log.Error($"Attempted to assign invalid user group {group} to {userid}");
+							continue;
+						}
+
+						ReferenceHub player = Player.GetPlayer(userid);
+						if (player == null)
+						{
+							Log.Error($"Error assigning user group to {userid}, player not found.");
+							continue;
+						}
+
+						if (Plugin.setRoleGroups.Contains(group))
+						{
+							Log.Info($"Assigning role: {userGroup} to {userid}.");
+							player.serverRoles.SetGroup(userGroup, false);
+						}
+						if (Plugin.reservedSlotGroups.Contains(group))
+						{
+							// grant reserved slot
+							Log.Info("Player has necessary rank for reserved slot, checking...");
+							List<string> lines = File.ReadAllLines(Plugin.reservedSlots).ToList();
+							if (!lines.Contains(userid))
+							{
+								Log.Info("Reserved slot not found, adding player...");
+								lines.Add(userid);
+								File.WriteAllLines(Plugin.reservedSlots, lines);
+								// This only reloads the slots on the current server, change this to reload on every server?
+								// Might not work
+								ReservedSlot.Reload();
+							}
+						}
+						else
+						{
+							Plugin.VerifyReservedSlot(userid);
+						}
 					}
 				}
 				catch (Exception x)

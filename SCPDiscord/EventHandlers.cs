@@ -1,4 +1,5 @@
 ﻿using EXILED;
+using Newtonsoft.Json;
 using SCPDiscord.DataObjects;
 using SCPDiscord.DataObjects.Events;
 using System.Linq;
@@ -41,6 +42,11 @@ namespace SCPDiscord
 
 		public void OnPlayerJoin(PlayerJoinEvent ev)
 		{
+			tcp.SendData(JsonConvert.SerializeObject(new RoleSync
+			{
+				userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+			}));
+
 			tcp.SendData(new Player
 			{
 				eventName = "PlayerJoin",

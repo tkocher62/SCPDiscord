@@ -1,9 +1,53 @@
 ﻿using EXILED;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace SCPDiscord
 {
 	public class Plugin : EXILED.Plugin
 	{
+		public static List<string> setRoleGroups = new List<string>()
+		{
+			"patron1",
+			"patron2",
+			"patron3"
+		};
+
+		public static List<string> reservedSlotGroups = new List<string>()
+		{
+			"patron3",
+			"patron4",
+			"patron5",
+			"patron6",
+			"patron7"
+		};
+
+		public static void VerifyReservedSlot(string userid)
+		{
+			Log.Info($"Role sync found for {userid}. Checking reserved slots status...");
+			List<string> lines = File.ReadAllLines(reservedSlots).ToList();
+			for (int i = 0; i < lines.Count; i++)
+			{
+				if (lines[i] == userid)
+				{
+					Log.Info("Reserved slot found, removing...");
+					lines.RemoveAt(i);
+					File.WriteAllLines(reservedSlots, lines);
+					// Send message to server to reload reserved slots?
+					return;
+				}
+			}
+		}
+
+		public static string reservedSlots = 
+			Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+			+ Path.DirectorySeparatorChar + "SCP Secret Laboratory"
+			+ Path.DirectorySeparatorChar + "config"
+			+ Path.DirectorySeparatorChar + "global"
+			+ Path.DirectorySeparatorChar + "UserIDReservedSlots.txt";
+
 		private EventHandlers ev;
 
 		public override void OnEnable()
