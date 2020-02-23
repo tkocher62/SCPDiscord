@@ -68,73 +68,7 @@ namespace SCPDiscord
 					socket.Receive(a);
 					JObject o = (JObject)JToken.FromObject(JsonConvert.DeserializeObject(Encoding.UTF8.GetString(a)));
 
-					string type = (string)o["type"];
-					if (type == "IDENT")
-					{
-						if ((string)o["data"] == "PASS") Log.Debug($"Server {ServerConsole.Port} passed identification.");
-						else if ((string)o["data"] == "FAIL") Log.Warn($"Server {ServerConsole.Port} failed identification.");
-					}
-					else if (type == "UPDATE")
-					{
-						SendData(new Update());
-					}
-					else if (type == "ROLESYNC")
-					{
-						string userid = (string)o["userid"];
-
-						if (o["group"] == null)
-						{
-							Log.Debug($"No role sync found for {userid}");
-							Plugin.VerifyReservedSlot(userid);
-							continue;
-						}
-
-						string group = (string)o["group"];
-
-						UserGroup userGroup = ServerStatic.PermissionsHandler.GetGroup(group);
-						if (userGroup == null)
-						{
-							Log.Error($"Attempted to assign invalid user group {group} to {userid}");
-							continue;
-						}
-
-						ReferenceHub player = Player.GetPlayer(userid);
-						if (player == null)
-						{
-							Log.Error($"Error assigning user group to {userid}, player not found.");
-							continue;
-						}
-
-						if (Plugin.setRoleGroups.Contains(group))
-						{
-							Log.Debug($"Assigning role: {userGroup} to {userid}.");
-							player.serverRoles.SetGroup(userGroup, false);
-						}
-						if (Plugin.reservedSlotGroups.Contains(group))
-						{
-							// grant reserved slot
-							Log.Debug("Player has necessary rank for reserved slot, checking...");
-							List<string> lines = File.ReadAllLines(Plugin.reservedSlots).ToList();
-							if (!lines.Contains(userid))
-							{
-								Log.Debug("Reserved slot not found, adding player...");
-								lines.Add(userid);
-								File.WriteAllLines(Plugin.reservedSlots, lines);
-								// This only reloads the slots on the current server, change this to reload on every server?
-								// Might not work
-								ReservedSlot.Reload();
-							}
-						}
-						else
-						{
-							Plugin.VerifyReservedSlot(userid);
-						}
-					}
-					else if (type == "COMMAND")
-					{
-						Log.Info("running command: " + (string)o["command"]);
-						GameCore.Console.singleton.TypeCommand((string)o["command"]);
-					}
+					CommandHandler.HandleCommand(o);
 				}
 				catch (Exception x)
 				{

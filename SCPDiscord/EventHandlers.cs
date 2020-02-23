@@ -8,7 +8,7 @@ namespace SCPDiscord
 {
 	class EventHandlers
 	{
-		Tcp tcp;
+		public static Tcp tcp;
 
 		public EventHandlers()
 		{
