@@ -65,11 +65,8 @@ namespace SCPDiscord
 				try
 				{
 					byte[] a = new byte[1000];
-					Log.Warn("listening");
 					socket.Receive(a);
-					Log.Warn("got data");
 					JObject o = (JObject)JToken.FromObject(JsonConvert.DeserializeObject(Encoding.UTF8.GetString(a)));
-					Log.Warn(o.ToString());
 
 					string type = (string)o["type"];
 					if (type == "IDENT")
@@ -79,7 +76,6 @@ namespace SCPDiscord
 					}
 					else if (type == "UPDATE")
 					{
-						Log.Warn("updating");
 						SendData(new Update());
 					}
 					else if (type == "ROLESYNC")
