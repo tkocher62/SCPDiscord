@@ -65,12 +65,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataObjects\Events\TeamRespawn.cs" />
+    <Compile Include="DataObjects\Events\UserId.cs" />
     <Compile Include="DataObjects\Events\Command.cs" />
-    <Compile Include="DataObjects\Events\ItemInteract.cs" />
+    <Compile Include="DataObjects\Events\PlayerParameter.cs" />
     <Compile Include="DataObjects\Events\Generic.cs" />
     <Compile Include="DataObjects\Events\Player.cs" />
     <Compile Include="DataObjects\Events\PlayerDamage.cs" />
-    <Compile Include="DataObjects\Events\SetClass.cs" />
     <Compile Include="DataObjects\Identify.cs" />
     <Compile Include="DataObjects\User.cs" />
     <Compile Include="EventHandlers.cs" />

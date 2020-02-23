@@ -1,6 +1,7 @@
 ﻿using EXILED;
 using SCPDiscord.DataObjects;
 using SCPDiscord.DataObjects.Events;
+using System.Linq;
 
 namespace SCPDiscord
 {
@@ -45,49 +46,49 @@ namespace SCPDiscord
 				player = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
-					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				}
 			});
 		}
 
 		public void OnSetClass(SetClassEvent ev)
 		{
-			tcp.SendData(new SetClass
+			tcp.SendData(new PlayerParameter
 			{
 				player = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
-					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
-				role = ev.Role
+				parameter = ev.Role.ToString()
 			});
 		}
 
 		public void OnDropItem(ref DropItemEvent ev)
 		{
-			tcp.SendData(new ItemInteract
+			tcp.SendData(new PlayerParameter
 			{
 				eventName = "DropItem",
 				player = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
-					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
-				item = ev.Item.id
+				parameter = ev.Item.id.ToString()
 			});
 		}
 
 		public void OnPickupItem(ref PickupItemEvent ev)
 		{
-			tcp.SendData(new ItemInteract
+			tcp.SendData(new PlayerParameter
 			{
 				eventName = "PickupItem",
 				player = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
-					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
-				item = ev.Item.info.itemId
+				parameter = ev.Item.info.itemId.ToString()
 			});
 		}
 
@@ -99,7 +100,7 @@ namespace SCPDiscord
 				player = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
-					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				}
 			});
 		}
@@ -112,12 +113,12 @@ namespace SCPDiscord
 				victim = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
-					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
 				attacker = new User
 				{
 					name = ev.Attacker.nicknameSync.Network_myNickSync,
-					steamid = ev.Attacker.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Attacker.characterClassManager.UserId.Replace("@steam", "")
 				},
 				damage = (int)ev.Info.Amount,
 				weapon = ev.Info.GetDamageName().ToString()
@@ -132,12 +133,12 @@ namespace SCPDiscord
 				victim = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
-					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
 				attacker = new User
 				{
 					name = ev.Killer.nicknameSync.Network_myNickSync,
-					steamid = ev.Killer.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Killer.characterClassManager.UserId.Replace("@steam", "")
 				},
 				damage = (int)ev.Info.Amount,
 				weapon = ev.Info.GetDamageName().ToString()
@@ -160,7 +161,7 @@ namespace SCPDiscord
 				player = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
-					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
 			});
 		}
@@ -175,7 +176,7 @@ namespace SCPDiscord
 				sender = new User
 				{
 					name = ply.nicknameSync.Network_myNickSync,
-					steamid = ply.characterClassManager.UserId.Replace("@steam", "")
+					userid = ply.characterClassManager.UserId.Replace("@steam", "")
 				},
 				command = ev.Command
 			});
@@ -189,9 +190,69 @@ namespace SCPDiscord
 				sender = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
-					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
 				command = ev.Command
+			});
+		}
+
+		public void OnPreAuth(ref PreauthEvent ev)
+		{
+			tcp.SendData(new UserId
+			{
+				eventName = "PreAuth",
+				userid = ev.UserId
+			});
+		}
+
+		public void OnRoundRestart()
+		{
+			tcp.SendData(new Generic
+			{
+				eventName = "RoundRestart"
+			});
+		}
+
+		public void OnScp079TriggerTesla(ref Scp079TriggerTeslaEvent ev)
+		{
+			tcp.SendData(new Player
+			{
+				eventName = "Scp079TriggerTesla",
+				player = new User
+				{
+					name = ev.Player.nicknameSync.Network_myNickSync,
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+				}
+			});
+		}
+
+		public void OnScp914ChangeKnob(ref Scp914KnobChangeEvent ev)
+		{
+			tcp.SendData(new PlayerParameter
+			{
+				eventName = "Scp914ChangeKnob",
+				player = new User
+				{
+					name = ev.Player.nicknameSync.Network_myNickSync,
+					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+				},
+				parameter = ev.KnobSetting.ToString()
+			});
+		}
+
+		public void OnTeamRespawn(ref TeamRespawnEvent ev)
+		{
+			tcp.SendData(new TeamRespawn
+			{
+				eventName = "TeamRespawn",
+				players = EXILED.Extensions.Player.GetHubs().Select(x =>
+				{
+					return new User
+					{
+						name = x.nicknameSync.Network_myNickSync,
+						userid = x.characterClassManager.UserId
+					};
+				}).ToArray()
 			});
 		}
 	}

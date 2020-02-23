@@ -21,6 +21,11 @@ namespace SCPDiscord
 			Events.GrenadeThrownEvent += ev.OnGrenadeThrown;
 			Events.RemoteAdminCommandEvent += ev.OnRACommand;
 			Events.ConsoleCommandEvent += ev.OnConsoleCommand;
+			Events.PreAuthEvent += ev.OnPreAuth;
+			Events.RoundRestartEvent += ev.OnRoundRestart;
+			Events.Scp079TriggerTeslaEvent += ev.OnScp079TriggerTesla;
+			Events.Scp914KnobChangeEvent += ev.OnScp914ChangeKnob;
+			Events.TeamRespawnEvent += ev.OnTeamRespawn;
 		}
 
 		public override void OnDisable()

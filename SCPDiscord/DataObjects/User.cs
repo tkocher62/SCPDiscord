@@ -3,6 +3,6 @@
 	class User
 	{
 		public string name;
-		public string steamid;
+		public string userid;
 	}
 }
