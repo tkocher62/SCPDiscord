@@ -7,5 +7,6 @@ namespace SCPDiscord.DataObjects.Events
 		public string type = "EVENT";
 		public string eventName;
 		public string time = DateTime.Now.ToString("HH:mm:ss");
+		public string param;
 	}
 }

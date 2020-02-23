@@ -68,7 +68,7 @@
     <Compile Include="DataObjects\Events\TeamRespawn.cs" />
     <Compile Include="DataObjects\Events\UserId.cs" />
     <Compile Include="DataObjects\Events\Command.cs" />
-    <Compile Include="DataObjects\Events\PlayerParameter.cs" />
+    <Compile Include="DataObjects\Events\PlayerParam.cs" />
     <Compile Include="DataObjects\Events\Generic.cs" />
     <Compile Include="DataObjects\Events\Player.cs" />
     <Compile Include="DataObjects\Events\PlayerDamage.cs" />

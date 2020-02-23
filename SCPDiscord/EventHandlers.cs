@@ -26,7 +26,8 @@ namespace SCPDiscord
 		{
 			tcp.SendData(new Generic
 			{
-				eventName = "RoundStart"
+				eventName = "RoundStart",
+				param = EXILED.Extensions.Player.GetHubs().Count().ToString()
 			});
 		}
 
@@ -53,20 +54,20 @@ namespace SCPDiscord
 
 		public void OnSetClass(SetClassEvent ev)
 		{
-			tcp.SendData(new PlayerParameter
+			tcp.SendData(new PlayerParam
 			{
 				player = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
-				parameter = ev.Role.ToString()
+				param = ev.Role.ToString()
 			});
 		}
 
 		public void OnDropItem(ref DropItemEvent ev)
 		{
-			tcp.SendData(new PlayerParameter
+			tcp.SendData(new PlayerParam
 			{
 				eventName = "DropItem",
 				player = new User
@@ -74,13 +75,13 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
-				parameter = ev.Item.id.ToString()
+				param = ev.Item.id.ToString()
 			});
 		}
 
 		public void OnPickupItem(ref PickupItemEvent ev)
 		{
-			tcp.SendData(new PlayerParameter
+			tcp.SendData(new PlayerParam
 			{
 				eventName = "PickupItem",
 				player = new User
@@ -88,7 +89,7 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
-				parameter = ev.Item.info.itemId.ToString()
+				param = ev.Item.info.itemId.ToString()
 			});
 		}
 
@@ -228,7 +229,7 @@ namespace SCPDiscord
 
 		public void OnScp914ChangeKnob(ref Scp914KnobChangeEvent ev)
 		{
-			tcp.SendData(new PlayerParameter
+			tcp.SendData(new PlayerParam
 			{
 				eventName = "Scp914ChangeKnob",
 				player = new User
@@ -236,7 +237,7 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
-				parameter = ev.KnobSetting.ToString()
+				param = ev.KnobSetting.ToString()
 			});
 		}
 
@@ -298,7 +299,7 @@ namespace SCPDiscord
 
 		public void OnSetGroup(SetGroupEvent ev)
 		{
-			tcp.SendData(new PlayerParameter
+			tcp.SendData(new PlayerParam
 			{
 				eventName = "SetGroup",
 				player = new User
@@ -306,7 +307,7 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
 				},
-				parameter = ev.Group.BadgeText
+				param = ev.Group.BadgeText
 			});
 		}
 	}
