@@ -26,13 +26,13 @@ namespace SCPDiscord
 
 		public static void VerifyReservedSlot(string userid)
 		{
-			Log.Info($"Role sync found for {userid}. Checking reserved slots status...");
+			Log.Debug($"Role sync found for {userid}. Checking reserved slots status...");
 			List<string> lines = File.ReadAllLines(reservedSlots).ToList();
 			for (int i = 0; i < lines.Count; i++)
 			{
 				if (lines[i] == userid)
 				{
-					Log.Info("Reserved slot found, removing...");
+					Log.Debug("Reserved slot found, removing...");
 					lines.RemoveAt(i);
 					File.WriteAllLines(reservedSlots, lines);
 					// Send message to server to reload reserved slots?

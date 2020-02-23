@@ -91,7 +91,7 @@ namespace SCPDiscord
 
 						string group = (string)o["group"];
 
-						UserGroup userGroup = ServerStatic.PermissionsHandler.GetGroup((string)o["group"]);
+						UserGroup userGroup = ServerStatic.PermissionsHandler.GetGroup(group);
 						if (userGroup == null)
 						{
 							Log.Error($"Attempted to assign invalid user group {group} to {userid}");
@@ -107,17 +107,17 @@ namespace SCPDiscord
 
 						if (Plugin.setRoleGroups.Contains(group))
 						{
-							Log.Info($"Assigning role: {userGroup} to {userid}.");
+							Log.Debug($"Assigning role: {userGroup} to {userid}.");
 							player.serverRoles.SetGroup(userGroup, false);
 						}
 						if (Plugin.reservedSlotGroups.Contains(group))
 						{
 							// grant reserved slot
-							Log.Info("Player has necessary rank for reserved slot, checking...");
+							Log.Debug("Player has necessary rank for reserved slot, checking...");
 							List<string> lines = File.ReadAllLines(Plugin.reservedSlots).ToList();
 							if (!lines.Contains(userid))
 							{
-								Log.Info("Reserved slot not found, adding player...");
+								Log.Debug("Reserved slot not found, adding player...");
 								lines.Add(userid);
 								File.WriteAllLines(Plugin.reservedSlots, lines);
 								// This only reloads the slots on the current server, change this to reload on every server?
