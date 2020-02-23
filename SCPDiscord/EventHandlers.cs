@@ -183,8 +183,8 @@ namespace SCPDiscord
 				eventName = "RACommand",
 				sender = new User
 				{
-					name = ply.nicknameSync.Network_myNickSync,
-					userid = ply.characterClassManager.UserId
+					name = ply != null ? ply.nicknameSync.Network_myNickSync : "Server",
+					userid = ply != null ? ply.characterClassManager.UserId : ""
 				},
 				command = ev.Command
 			});
