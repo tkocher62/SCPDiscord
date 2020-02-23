@@ -63,6 +63,7 @@ namespace SCPDiscord
 		{
 			tcp.SendData(new PlayerParam
 			{
+				eventName = "SetClass",
 				player = new User
 				{
 					name = ev.Player.nicknameSync.Network_myNickSync,
@@ -163,7 +164,7 @@ namespace SCPDiscord
 
 		public void OnGrenadeThrown(ref GrenadeThrownEvent ev)
 		{
-			tcp.SendData(new Player
+			tcp.SendData(new PlayerParam
 			{
 				eventName = "GrenadeThrown",
 				player = new User
@@ -171,6 +172,7 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId
 				},
+				param = ev.Id.ToString()
 			});
 		}
 
@@ -206,10 +208,12 @@ namespace SCPDiscord
 
 		public void OnPreAuth(ref PreauthEvent ev)
 		{
+			string remote = ev.Request.RemoteEndPoint.ToString();
 			tcp.SendData(new UserId
 			{
 				eventName = "PreAuth",
-				userid = ev.UserId
+				userid = ev.UserId,
+				ip = remote.Substring(0, remote.IndexOf(":"))
 			});
 		}
 

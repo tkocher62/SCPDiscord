@@ -132,7 +132,8 @@ namespace SCPDiscord
 					}
 					else if (type == "COMMAND")
 					{
-						GameCore.Console.singleton.TypeCommand($"/{(string)o["command"]}");
+						Log.Info("running command: " + (string)o["command"]);
+						GameCore.Console.singleton.TypeCommand((string)o["command"]);
 					}
 				}
 				catch (Exception x)
