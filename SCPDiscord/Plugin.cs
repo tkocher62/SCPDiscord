@@ -17,6 +17,10 @@ namespace SCPDiscord
 			Events.PlayerLeaveEvent += ev.OnPlayerLeave;
 			Events.PlayerHurtEvent += ev.OnPlayerHurt;
 			Events.PlayerDeathEvent += ev.OnPlayerDeath;
+			Events.DecontaminationEvent += ev.OnDecontamination;
+			Events.GrenadeThrownEvent += ev.OnGrenadeThrown;
+			Events.RemoteAdminCommandEvent += ev.OnRACommand;
+			Events.ConsoleCommandEvent += ev.OnConsoleCommand;
 		}
 
 		public override void OnDisable()

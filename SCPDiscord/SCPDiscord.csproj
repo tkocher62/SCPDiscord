@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataObjects\Events\Command.cs" />
     <Compile Include="DataObjects\Events\ItemInteract.cs" />
     <Compile Include="DataObjects\Events\Generic.cs" />
     <Compile Include="DataObjects\Events\Player.cs" />

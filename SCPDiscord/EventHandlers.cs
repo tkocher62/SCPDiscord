@@ -143,5 +143,56 @@ namespace SCPDiscord
 				weapon = ev.Info.GetDamageName().ToString()
 			});
 		}
+
+		public void OnDecontamination(ref DecontaminationEvent ev)
+		{
+			tcp.SendData(new Generic
+			{
+				eventName = "Decontamination"
+			});
+		}
+
+		public void OnGrenadeThrown(ref GrenadeThrownEvent ev)
+		{
+			tcp.SendData(new Player
+			{
+				eventName = "GrenadeThrown",
+				player = new User
+				{
+					name = ev.Player.nicknameSync.Network_myNickSync,
+					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+				},
+			});
+		}
+
+		public void OnRACommand(ref RACommandEvent ev)
+		{
+			ReferenceHub ply = EXILED.Extensions.Player.GetPlayer(ev.Sender.SenderId);
+
+			tcp.SendData(new Command
+			{
+				eventName = "RACommand",
+				sender = new User
+				{
+					name = ply.nicknameSync.Network_myNickSync,
+					steamid = ply.characterClassManager.UserId.Replace("@steam", "")
+				},
+				command = ev.Command
+			});
+		}
+
+		public void OnConsoleCommand(ConsoleCommandEvent ev)
+		{
+			tcp.SendData(new Command
+			{
+				eventName = "ConsoleCommand",
+				sender = new User
+				{
+					name = ev.Player.nicknameSync.Network_myNickSync,
+					steamid = ev.Player.characterClassManager.UserId.Replace("@steam", "")
+				},
+				command = ev.Command
+			});
+		}
 	}
 }
