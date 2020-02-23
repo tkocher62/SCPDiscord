@@ -259,7 +259,8 @@ namespace SCPDiscord
 						name = x.nicknameSync.Network_myNickSync,
 						userid = x.characterClassManager.UserId
 					};
-				}).ToArray()
+				}).ToArray(),
+				team = ev.IsChaos ? 0 : 1
 			});
 		}
 
