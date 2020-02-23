@@ -12,7 +12,8 @@ namespace SCPDiscord
 
 		public EventHandlers()
 		{
-			//tcp = new Tcp("127.0.0.1", 1111);
+			tcp = new Tcp("127.0.0.1", 8080);
+			tcp.Init();
 		}
 
 		public void OnWaitingForPlayers()
@@ -42,10 +43,10 @@ namespace SCPDiscord
 
 		public void OnPlayerJoin(PlayerJoinEvent ev)
 		{
-			tcp.SendData(JsonConvert.SerializeObject(new RoleSync
+			tcp.SendData(new RoleSync
 			{
 				userid = ev.Player.characterClassManager.UserId
-			}));
+			});
 
 			tcp.SendData(new Player
 			{
