@@ -10,7 +10,6 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace SCPDiscord
 {
@@ -45,7 +44,7 @@ namespace SCPDiscord
 				try
 				{
 					socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-					socket.Connect("127.0.0.1", 9090);
+					socket.Connect(ip, port);
 
 					new Thread(Listen).Start();
 					SendData(new Identify());
@@ -53,7 +52,7 @@ namespace SCPDiscord
 				catch (Exception x)
 				{
 					// Failed to connect
-					Log.Warn("Failed to connect to Watchlist bot, retrying in 10 seconds...");
+					Log.Warn("Failed to connect to SCPDiscord bot, retrying in 10 seconds...");
 				}
 				Thread.Sleep(10000);
 			}
@@ -81,7 +80,7 @@ namespace SCPDiscord
 					}
 					else if (type == "ROLESYNC")
 					{
-						string userid = $"{(string)o["userid"]}@steam";
+						string userid = (string)o["userid"];
 
 						if (o["group"] == null)
 						{
@@ -131,10 +130,14 @@ namespace SCPDiscord
 							Plugin.VerifyReservedSlot(userid);
 						}
 					}
+					else if (type == "COMMAND")
+					{
+						GameCore.Console.singleton.TypeCommand($"/{(string)o["command"]}");
+					}
 				}
 				catch (Exception x)
 				{
-					Log.Error("Watchlist listener error: " + x.Message);
+					Log.Error("SCPDiscord listener error: " + x.Message);
 				}
 			}
 			new Thread(AttemptConnection).Start();
