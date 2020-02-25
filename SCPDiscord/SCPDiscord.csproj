@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass">
@@ -43,6 +44,9 @@
     </Reference>
     <Reference Include="EXILED_Events">
       <HintPath>..\..\..\..\AppData\Roaming\Plugins\EXILED_Events.dll</HintPath>
+    </Reference>
+    <Reference Include="EXILED_Permissions">
+      <HintPath>..\..\..\..\AppData\Roaming\Plugins\EXILED_Permissions.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
       <HintPath>..\..\..\..\Desktop\References\Mirror.dll</HintPath>
@@ -68,6 +72,7 @@
   <ItemGroup>
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Configs.cs" />
+    <Compile Include="DataObjects\Restart.cs" />
     <Compile Include="DataObjects\RoleSync.cs" />
     <Compile Include="DataObjects\Update.cs" />
     <Compile Include="DataObjects\Events\TeamRespawn.cs" />

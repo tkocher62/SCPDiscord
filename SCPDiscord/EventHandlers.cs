@@ -194,6 +194,11 @@ namespace SCPDiscord
 				},
 				command = ev.Command
 			});
+
+			if (ev.Command.ToLower() == "silentrestart" && ply.CheckPermission("scpd.sr"))
+			{
+				tcp.SendData(new Restart());
+			}
 		}
 
 		public void OnConsoleCommand(ConsoleCommandEvent ev)
