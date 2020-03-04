@@ -1,7 +1,9 @@
 ﻿using EXILED;
 using MEC;
+using EXILED.Extensions;
 using SCPDiscord.DataObjects;
 using SCPDiscord.DataObjects.Events;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SCPDiscord
@@ -9,6 +11,8 @@ namespace SCPDiscord
 	class EventHandlers
 	{
 		public static Tcp tcp;
+
+		private static bool silentRestart;
 
 		public EventHandlers()
 		{
@@ -52,7 +56,7 @@ namespace SCPDiscord
 				userid = ev.Player.characterClassManager.UserId
 			}));
 
-			tcp.SendData(new Player
+			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
 			{
 				eventName = "PlayerJoin",
 				player = new User
@@ -107,7 +111,7 @@ namespace SCPDiscord
 
 		public void OnPlayerLeave(PlayerLeaveEvent ev)
 		{
-			tcp.SendData(new Player
+			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
 			{
 				eventName = "PlayerLeave",
 				player = new User
@@ -195,9 +199,13 @@ namespace SCPDiscord
 				command = ev.Command
 			});
 
-			if (ev.Command.ToLower() == "silentrestart" && ply.CheckPermission("scpd.sr"))
+			string cmd = ev.Command.ToLower();
+
+			if ((cmd == "silentrestart" || cmd == "sr") && ply.CheckPermission("scpd.sr"))
 			{
-				tcp.SendData(new Restart());
+				ev.Allow = false;
+				silentRestart = !silentRestart;
+				ev.Sender.RAMessage(silentRestart ? "Server set to silently restart next round." : "Server silent restart cancelled.", true);
 			}
 		}
 
@@ -232,11 +240,24 @@ namespace SCPDiscord
 			{
 				eventName = "RoundRestart"
 			});
+
+			if (silentRestart && Configs.localAdminPath != string.Empty && Configs.serverPrefix != string.Empty)
+			{
+				Timing.CallDelayed(2.5f, () =>
+				{
+					string s = $"{Configs.serverPrefix}{ServerConsole.Port - 7776}";
+					Process.Start("/bin/bash", "-c \"" +
+						$"screen -XS {s} quit\n" +
+						$"screen -dmS {s} {Configs.localAdminPath} {ServerConsole.Port}" +
+						"\"");
+				});
+				silentRestart = false;
+			}
 		}
 
 		public void OnScp079TriggerTesla(ref Scp079TriggerTeslaEvent ev)
 		{
-			tcp.SendData(new Player
+			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
 			{
 				eventName = "Scp079TriggerTesla",
 				player = new User
@@ -280,7 +301,7 @@ namespace SCPDiscord
 
 		public void OnFemurEnter(FemurEnterEvent ev)
 		{
-			tcp.SendData(new Player
+			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
 			{
 				eventName = "FemurEnter",
 				player = new User
@@ -294,7 +315,7 @@ namespace SCPDiscord
 		public void OnScp106Contain(Scp106ContainEvent ev)
 		{
 			// 'player' is the player who hit the button, not 106
-			tcp.SendData(new Player
+			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
 			{
 				eventName = "Scp106Contain",
 				player = new User
@@ -307,7 +328,7 @@ namespace SCPDiscord
 
 		public void OnScp914Activation(ref Scp914ActivationEvent ev)
 		{
-			tcp.SendData(new Player
+			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
 			{
 				eventName = "Scp914Activation",
 				player = new User
