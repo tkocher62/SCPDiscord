@@ -5,6 +5,7 @@ using SCPDiscord.DataObjects;
 using SCPDiscord.DataObjects.Events;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
 
 namespace SCPDiscord
 {
@@ -77,7 +78,7 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId
 				},
-				param = ev.Role.ToString()
+				param = Conversions.roles[ev.Role]
 			});
 		}
 
@@ -91,7 +92,7 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId
 				},
-				param = ev.Item.id.ToString()
+				param = Conversions.items[ev.Item.id]
 			});
 		}
 
@@ -105,7 +106,7 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId
 				},
-				param = ev.Item.info.itemId.ToString()
+				param = Conversions.items[ev.Item.id]
 			});
 		}
 
@@ -180,7 +181,7 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId
 				},
-				param = ev.Id.ToString()
+				param = Conversions.grenades[ev.Id]
 			});
 		}
 
@@ -245,11 +246,7 @@ namespace SCPDiscord
 			{
 				Timing.CallDelayed(2.5f, () =>
 				{
-					string s = $"{Configs.serverPrefix}{ServerConsole.Port - 7776}";
-					Process.Start("/bin/bash", "-c \"" +
-						$"screen -XS {s} quit\n" +
-						$"screen -dmS {s} {Configs.localAdminPath} {ServerConsole.Port}" +
-						"\"");
+					tcp.SendData(new Restart());
 				});
 				silentRestart = false;
 			}
@@ -315,7 +312,7 @@ namespace SCPDiscord
 		public void OnScp106Contain(Scp106ContainEvent ev)
 		{
 			// 'player' is the player who hit the button, not 106
-			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
+			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "Scp106Contain",
 				player = new User
@@ -328,7 +325,7 @@ namespace SCPDiscord
 
 		public void OnScp914Activation(ref Scp914ActivationEvent ev)
 		{
-			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
+			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "Scp914Activation",
 				player = new User

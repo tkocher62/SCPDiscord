@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="CommandHandler.cs" />
     <Compile Include="Configs.cs" />
+    <Compile Include="Conversions.cs" />
     <Compile Include="DataObjects\Restart.cs" />
     <Compile Include="DataObjects\RoleSync.cs" />
     <Compile Include="DataObjects\Update.cs" />
@@ -92,5 +93,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
