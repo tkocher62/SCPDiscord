@@ -109,7 +109,7 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId
 				},
-				param = Conversions.items[ev.Item.id]
+				param = Conversions.items[ev.Item.ItemId]
 			});
 		}
 
