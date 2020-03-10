@@ -70,16 +70,19 @@ namespace SCPDiscord
 
 		public void OnSetClass(SetClassEvent ev)
 		{
-			tcp.SendData(new PlayerParam
+			if (ev.Player.GetRole() != ev.Role)
 			{
-				eventName = "SetClass",
-				player = new User
+				tcp.SendData(new PlayerParam
 				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				},
-				param = Conversions.roles[ev.Role]
-			});
+					eventName = "SetClass",
+					player = new User
+					{
+						name = ev.Player.nicknameSync.Network_myNickSync,
+						userid = ev.Player.characterClassManager.UserId
+					},
+					param = Conversions.roles[ev.Role]
+				});
+			}
 		}
 
 		public void OnDropItem(ref DropItemEvent ev)
