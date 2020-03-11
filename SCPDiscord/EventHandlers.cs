@@ -70,7 +70,7 @@ namespace SCPDiscord
 
 		public void OnSetClass(SetClassEvent ev)
 		{
-			if (ev.Player.GetRole() != ev.Role)
+			if (ev.Player.GetRole() != ev.Role && ev.Player.characterClassManager.UserId != null)
 			{
 				tcp.SendData(new PlayerParam
 				{
@@ -115,15 +115,18 @@ namespace SCPDiscord
 
 		public void OnPlayerLeave(PlayerLeaveEvent ev)
 		{
-			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
+			if (ev.Player.characterClassManager.UserId != null)
 			{
-				eventName = "PlayerLeave",
-				player = new User
+				tcp.SendData(new DataObjects.Events.Player
 				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				}
-			});
+					eventName = "PlayerLeave",
+					player = new User
+					{
+						name = ev.Player.nicknameSync.Network_myNickSync,
+						userid = ev.Player.characterClassManager.UserId
+					}
+				});
+			}
 		}
 
 		public void OnPlayerHurt(ref PlayerHurtEvent ev)
