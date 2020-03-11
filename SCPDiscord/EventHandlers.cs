@@ -281,7 +281,7 @@ namespace SCPDiscord
 					name = ev.Player.nicknameSync.Network_myNickSync,
 					userid = ev.Player.characterClassManager.UserId
 				},
-				param = ev.KnobSetting.ToString()
+				param = Conversions.knobsettings[ev.KnobSetting]
 			});
 		}
 

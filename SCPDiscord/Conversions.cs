@@ -59,7 +59,16 @@ namespace SCPDiscord
 		{
 			{ 0, "Granade" },
 			{ 1, "Flashbang" },
-			{ 2, "SCP-018" },
+			{ 2, "SCP-018" }
+		};
+
+		public static Dictionary<Scp914.Scp914Knob, string> knobsettings = new Dictionary<Scp914.Scp914Knob, string>()
+		{
+			{ Scp914.Scp914Knob.Rough, "Rough" },
+			{ Scp914.Scp914Knob.Coarse, "Course" },
+			{ Scp914.Scp914Knob.OneToOne, "1:1" },
+			{ Scp914.Scp914Knob.Fine, "Fine" },
+			{ Scp914.Scp914Knob.VeryFine, "Very Fine" }
 		};
 	}
 }
