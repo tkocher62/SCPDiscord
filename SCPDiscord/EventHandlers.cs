@@ -4,6 +4,7 @@ using EXILED.Extensions;
 using SCPDiscord.DataObjects;
 using SCPDiscord.DataObjects.Events;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SCPDiscord
 {
@@ -12,6 +13,8 @@ namespace SCPDiscord
 		public static Tcp tcp;
 
 		private static bool silentRestart;
+
+		private Dictionary<ReferenceHub, RoleType> roles = new Dictionary<ReferenceHub, RoleType>();
 
 		public EventHandlers()
 		{
@@ -33,6 +36,8 @@ namespace SCPDiscord
 
 		public void OnRoundStart()
 		{
+			roles.Clear();
+
 			tcp.SendData(new Generic
 			{
 				eventName = "RoundStart",
@@ -68,7 +73,11 @@ namespace SCPDiscord
 
 		public void OnSetClass(SetClassEvent ev)
 		{
-			if (ev.Player.GetRole() != ev.Role && ev.Player.characterClassManager.UserId != null)
+			if (!roles.ContainsKey(ev.Player)) roles.Add(ev.Player, RoleType.None);
+			if (roles[ev.Player] == ev.Role || ev.Role == RoleType.Spectator) return;
+			roles[ev.Player] = ev.Role;
+
+			if (ev.Player.characterClassManager.UserId != null)
 			{
 				tcp.SendData(new PlayerParam
 				{
@@ -315,7 +324,7 @@ namespace SCPDiscord
 			});
 		}
 
-		public void OnFemurEnter(FemurEnterEvent ev)
+		/*public void OnFemurEnter(FemurEnterEvent ev)
 		{
 			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
 			{
@@ -326,7 +335,7 @@ namespace SCPDiscord
 					userid = ev.Player.characterClassManager.UserId
 				}
 			});
-		}
+		}*/
 
 		public void OnScp106Contain(Scp106ContainEvent ev)
 		{
