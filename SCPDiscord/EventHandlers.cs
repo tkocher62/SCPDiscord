@@ -151,22 +151,25 @@ namespace SCPDiscord
 
 		public void OnPlayerDeath(ref PlayerDeathEvent ev)
 		{
-			tcp.SendData(new PlayerDamage
+			if (ev.Player.GetRole() != RoleType.Spectator)
 			{
-				eventName = "PlayerDeath",
-				victim = new User
+				tcp.SendData(new PlayerDamage
 				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				},
-				attacker = new User
-				{
-					name = ev.Killer.nicknameSync.Network_myNickSync,
-					userid = ev.Killer.characterClassManager.UserId
-				},
-				damage = (int)ev.Info.Amount,
-				weapon = ev.Info.GetDamageName().ToString()
-			});
+					eventName = "PlayerDeath",
+					victim = new User
+					{
+						name = ev.Player.nicknameSync.Network_myNickSync,
+						userid = ev.Player.characterClassManager.UserId
+					},
+					attacker = new User
+					{
+						name = ev.Killer.nicknameSync.Network_myNickSync,
+						userid = ev.Killer.characterClassManager.UserId
+					},
+					damage = (int)ev.Info.Amount,
+					weapon = ev.Info.GetDamageName().ToString()
+				});
+			}
 		}
 
 		public void OnDecontamination(ref DecontaminationEvent ev)
