@@ -83,7 +83,9 @@ namespace SCPDiscord
 				}
 				else if (type == "BAN")
 				{
-					ReferenceHub player = Player.GetPlayer((string)o["user"]);
+					string uid = (string)o["user"];
+					if (!uid.Contains("@steam") && uid.Contains("@discord")) uid += "@steam";
+					ReferenceHub player = Player.GetPlayer(uid);
 					int min = (int)o["min"];
 					if (player != null)
 					{
