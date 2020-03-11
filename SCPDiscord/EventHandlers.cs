@@ -3,9 +3,7 @@ using MEC;
 using EXILED.Extensions;
 using SCPDiscord.DataObjects;
 using SCPDiscord.DataObjects.Events;
-using System.Diagnostics;
 using System.Linq;
-using System.IO;
 
 namespace SCPDiscord
 {
@@ -153,7 +151,7 @@ namespace SCPDiscord
 		{
 			if (ev.Player.GetRole() != RoleType.Spectator)
 			{
-				tcp.SendData(new PlayerDamage
+				PlayerDamage data = new PlayerDamage
 				{
 					eventName = "PlayerDeath",
 					victim = new User
@@ -168,7 +166,19 @@ namespace SCPDiscord
 					},
 					damage = (int)ev.Info.Amount,
 					weapon = ev.Info.GetDamageName().ToString()
-				});
+				};
+
+				DamageTypes.DamageType type = ev.Info.GetDamageType();
+				if (type == DamageTypes.Tesla) data.eventName += "Tesla";
+				else if (type == DamageTypes.Decont) data.eventName += "Decont";
+				else if (type == DamageTypes.Falldown) data.eventName += "Fall";
+				else if (type == DamageTypes.Flying) data.eventName += "Flying";
+				else if (type == DamageTypes.Lure) data.eventName += "Lure";
+				else if (type == DamageTypes.Nuke) data.eventName += "Nuke";
+				else if (type == DamageTypes.Pocket) data.eventName += "Pocket";
+				else if (type == DamageTypes.Recontainment) data.eventName += "Recont";
+
+				tcp.SendData(data);
 			}
 		}
 

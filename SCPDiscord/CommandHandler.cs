@@ -79,8 +79,35 @@ namespace SCPDiscord
 				}
 				else if (type == "COMMAND")
 				{
-					Log.Info("running command: " + (string)o["command"]);
 					GameCore.Console.singleton.TypeCommand((string)o["command"]);
+				}
+				else if (type == "BAN")
+				{
+					ReferenceHub player = Player.GetPlayer((string)o["user"]);
+					int min = (int)o["min"];
+					if (player != null)
+					{
+						PlayerManager.localPlayer.GetComponent<BanPlayer>().BanUser(player.gameObject, min, (string)o["reason"], "Server");
+						EventHandlers.tcp.SendData(new Ban
+						{
+							player = new User
+							{
+								name = player.nicknameSync.Network_myNickSync,
+								userid = player.characterClassManager.UserId
+							},
+							duration = min,
+							success = true
+						});
+					}
+					else
+					{
+						EventHandlers.tcp.SendData(new Ban
+						{
+							player = null,
+							duration = min,
+							success = false
+						});
+					}
 				}
 			}
 			catch (Exception x)
