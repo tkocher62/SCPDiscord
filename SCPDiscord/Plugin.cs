@@ -66,6 +66,8 @@ namespace SCPDiscord
 			Events.RemoteAdminCommandEvent += ev.OnRACommand;
 			Events.ConsoleCommandEvent += ev.OnConsoleCommand;
 			Events.PreAuthEvent += ev.OnPreAuth;
+			Events.RoundStartEvent += ev.OnRoundStart;
+			Events.RoundEndEvent += ev.OnRoundEnd;
 			Events.RoundRestartEvent += ev.OnRoundRestart;
 			Events.Scp079TriggerTeslaEvent += ev.OnScp079TriggerTesla;
 			Events.Scp914KnobChangeEvent += ev.OnScp914ChangeKnob;

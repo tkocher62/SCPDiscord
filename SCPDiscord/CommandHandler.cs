@@ -84,12 +84,13 @@ namespace SCPDiscord
 				else if (type == "BAN")
 				{
 					string uid = (string)o["user"];
-					if (!uid.Contains("@steam") && uid.Contains("@discord")) uid += "@steam";
+					if (!uid.Contains("@steam") && !uid.Contains("@discord")) uid += "@steam";
 					ReferenceHub player = Player.GetPlayer(uid);
 					int min = (int)o["min"];
+					string reason = (string)o["reason"];
 					if (player != null)
 					{
-						PlayerManager.localPlayer.GetComponent<BanPlayer>().BanUser(player.gameObject, min, (string)o["reason"], "Server");
+						PlayerManager.localPlayer.GetComponent<BanPlayer>().BanUser(player.gameObject, min, reason, "Server");
 						EventHandlers.tcp.SendData(new Ban
 						{
 							player = new User
@@ -103,6 +104,35 @@ namespace SCPDiscord
 					}
 					else
 					{
+						/*if (uid.Contains("@steam") || uid.Contains("@discord"))
+						{
+							// userid ban
+
+							BanHandler.IssueBan(new BanDetails()
+							{
+								OriginalName = uid,
+								Id = uid,
+								IssuanceTime = TimeBehaviour.CurrentTimestamp(),
+								Expires = DateTime.UtcNow.AddMinutes((double)min).Ticks,
+								Reason = reason,
+								Issuer = "Server"
+							}, BanHandler.BanType.UserId);
+						}
+						else if (uid.Contains("."))
+						{
+							// ip ban
+
+							BanHandler.IssueBan(new BanDetails()
+							{
+								OriginalName = uid,
+								Id = uid,
+								IssuanceTime = TimeBehaviour.CurrentTimestamp(),
+								Expires = DateTime.UtcNow.AddMinutes((double)min).Ticks,
+								Reason = reason,
+								Issuer = "Server"
+							}, BanHandler.BanType.IP);
+						}*/
+
 						EventHandlers.tcp.SendData(new Ban
 						{
 							player = null,

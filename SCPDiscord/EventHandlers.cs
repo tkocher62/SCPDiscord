@@ -41,7 +41,7 @@ namespace SCPDiscord
 			tcp.SendData(new Generic
 			{
 				eventName = "RoundStart",
-				param = EXILED.Extensions.Player.GetHubs().Count().ToString()
+				param = EXILED.Extensions.Player.GetHubs().Where(x => x.characterClassManager.UserId != null).Count().ToString()
 			});
 		}
 
@@ -49,7 +49,8 @@ namespace SCPDiscord
 		{
 			tcp.SendData(new Generic
 			{
-				eventName = "RoundEnd"
+				eventName = "RoundEnd",
+				param = RoundSummary.roundTime.ToString()
 			});
 		}
 
