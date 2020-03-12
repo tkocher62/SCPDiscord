@@ -6,5 +6,6 @@
 		public User player;
 		public int duration;
 		public bool success;
+		public bool offline;
 	}
 }

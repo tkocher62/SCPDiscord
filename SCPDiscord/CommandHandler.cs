@@ -6,11 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 
 namespace SCPDiscord
 {
 	class CommandHandler
 	{
+		private static WebClient webclient = new WebClient();
+
 		public static void HandleCommand(JObject o)
 		{
 			try
@@ -83,34 +86,65 @@ namespace SCPDiscord
 				}
 				else if (type == "BAN")
 				{
+					bool isuid = false;
 					string uid = (string)o["user"];
-					if (!uid.Contains("@steam") && !uid.Contains("@discord")) uid += "@steam";
+					if (!uid.Contains("@steam") && !uid.Contains("@discord") && !uid.Contains("."))
+					{
+						isuid = true;
+						uid += "@steam";
+					}
 					ReferenceHub player = Player.GetPlayer(uid);
 					int min = (int)o["min"];
 					string reason = (string)o["reason"];
+
+					Ban ban = new Ban
+					{
+						player = null,
+						duration = min,
+						success = true,
+						offline = false
+					};
+
 					if (player != null)
 					{
 						PlayerManager.localPlayer.GetComponent<BanPlayer>().BanUser(player.gameObject, min, reason, "Server");
-						EventHandlers.tcp.SendData(new Ban
+
+						ban.player = new User
 						{
-							player = new User
-							{
-								name = player.nicknameSync.Network_myNickSync,
-								userid = player.characterClassManager.UserId
-							},
-							duration = min,
-							success = true
-						});
+							name = player.nicknameSync.Network_myNickSync,
+							userid = player.characterClassManager.UserId
+						};
 					}
 					else
 					{
-						/*if (uid.Contains("@steam") || uid.Contains("@discord"))
+						if (isuid)
 						{
-							// userid ban
+							ban.offline = true;
+
+							string name = "Offline Player";
+
+							if (Configs.steamAPIKey != string.Empty)
+							{
+								string data = null;
+								try
+								{
+									data = webclient.DownloadString($"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={Configs.steamAPIKey}&format=json&steamids={uid.Replace("@steam", "")}");
+								}
+								catch
+								{
+									Log.Debug("Failed to get profile data from SteamAPI.");
+								}
+								JObject o2 = JObject.Parse(data);
+
+								if (o2 != null)
+								{
+									name = (string)o2["response"]["players"][0]["personaname"];
+								}
+							}
 
 							BanHandler.IssueBan(new BanDetails()
 							{
-								OriginalName = uid,
+								OriginalName = name,
 								Id = uid,
 								IssuanceTime = TimeBehaviour.CurrentTimestamp(),
 								Expires = DateTime.UtcNow.AddMinutes((double)min).Ticks,
@@ -120,26 +154,24 @@ namespace SCPDiscord
 						}
 						else if (uid.Contains("."))
 						{
-							// ip ban
+							ban.offline = true;
 
 							BanHandler.IssueBan(new BanDetails()
 							{
-								OriginalName = uid,
+								OriginalName = "IP Address",
 								Id = uid,
 								IssuanceTime = TimeBehaviour.CurrentTimestamp(),
 								Expires = DateTime.UtcNow.AddMinutes((double)min).Ticks,
 								Reason = reason,
 								Issuer = "Server"
 							}, BanHandler.BanType.IP);
-						}*/
-
-						EventHandlers.tcp.SendData(new Ban
+						}
+						else
 						{
-							player = null,
-							duration = min,
-							success = false
-						});
+							ban.success = false;
+						}
 					}
+					EventHandlers.tcp.SendData(ban);
 				}
 			}
 			catch (Exception x)
