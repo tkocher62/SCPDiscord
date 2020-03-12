@@ -50,7 +50,7 @@ namespace SCPDiscord
 			tcp.SendData(new Generic
 			{
 				eventName = "RoundEnd",
-				param = RoundSummary.roundTime.ToString()
+				param = ((int)(EventPlugin.GetRoundDuration() / 60)).ToString()
 			});
 		}
 
