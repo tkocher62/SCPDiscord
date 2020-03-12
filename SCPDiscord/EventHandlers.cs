@@ -325,19 +325,6 @@ namespace SCPDiscord
 			});
 		}
 
-		/*public void OnFemurEnter(FemurEnterEvent ev)
-		{
-			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
-			{
-				eventName = "FemurEnter",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				}
-			});
-		}*/
-
 		public void OnScp106Contain(Scp106ContainEvent ev)
 		{
 			// 'player' is the player who hit the button, not 106
