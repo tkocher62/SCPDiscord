@@ -75,6 +75,8 @@ namespace SCPDiscord
 			Events.Scp106ContainEvent += ev.OnScp106Contain;
 			Events.Scp914ActivationEvent += ev.OnScp914Activation;
 			Events.SetGroupEvent += ev.OnSetGroup;
+			Events.PocketDimEnterEvent += ev.OnPocketDimensionEnter;
+			Events.PocketDimEscapedEvent += ev.OnPocketDimensionEscape;
 		}
 
 		public override void OnDisable()

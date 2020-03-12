@@ -365,5 +365,31 @@ namespace SCPDiscord
 				param = ev.Group.BadgeText
 			});
 		}
+
+		public void OnPocketDimensionEnter(PocketDimEnterEvent ev)
+		{
+			tcp.SendData(new DataObjects.Events.Player
+			{
+				eventName = "PocketDimensionEnter",
+				player = new User
+				{
+					name = ev.Player.nicknameSync.Network_myNickSync,
+					userid = ev.Player.characterClassManager.UserId
+				}
+			});
+		}
+
+		public void OnPocketDimensionEscape(PocketDimEscapedEvent ev)
+		{
+			tcp.SendData(new DataObjects.Events.Player
+			{
+				eventName = "PocketDimensionEscape",
+				player = new User
+				{
+					name = ev.Player.nicknameSync.Network_myNickSync,
+					userid = ev.Player.characterClassManager.UserId
+				}
+			});
+		}
 	}
 }
