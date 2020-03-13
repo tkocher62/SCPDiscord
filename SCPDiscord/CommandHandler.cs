@@ -88,10 +88,17 @@ namespace SCPDiscord
 				{
 					bool isuid = false;
 					string uid = (string)o["user"];
-					if (!uid.Contains("@steam") && !uid.Contains("@discord") && !uid.Contains("."))
+					if (!uid.Contains("@steam") && !uid.Contains("@discord"))
+					{
+						if (!uid.Contains("."))
+						{
+							isuid = true;
+							uid += "@steam";
+						}
+					}
+					else
 					{
 						isuid = true;
-						uid += "@steam";
 					}
 					ReferenceHub player = Player.GetPlayer(uid);
 					int min = (int)o["min"];
