@@ -147,6 +147,12 @@ namespace SCPDiscord
 								{
 									name = (string)o2["response"]["players"][0]["personaname"];
 								}
+
+								ban.player = new User
+								{
+									name = name,
+									userid = uid
+								};
 							}
 
 							BanHandler.IssueBan(new BanDetails()
