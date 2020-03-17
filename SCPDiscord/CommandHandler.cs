@@ -200,13 +200,13 @@ namespace SCPDiscord
 
 					if (player != null)
 					{
-						ServerConsole.Disconnect(player.gameObject, (string)o["reason"]);
-
 						kick.player = new User
 						{
 							name = player.nicknameSync.Network_myNickSync,
 							userid = player.characterClassManager.UserId
 						};
+
+						ServerConsole.Disconnect(player.gameObject, (string)o["reason"]);
 					}
 					EventHandlers.tcp.SendData(kick);
 				}
