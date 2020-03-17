@@ -74,6 +74,7 @@
     <Compile Include="Configs.cs" />
     <Compile Include="Conversions.cs" />
     <Compile Include="DataObjects\Ban.cs" />
+    <Compile Include="DataObjects\Kick.cs" />
     <Compile Include="DataObjects\Restart.cs" />
     <Compile Include="DataObjects\RoleSync.cs" />
     <Compile Include="DataObjects\Update.cs" />

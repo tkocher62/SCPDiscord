@@ -128,7 +128,11 @@ namespace SCPDiscord
 						{
 							ban.offline = true;
 
-							string name = "Offline Player";
+							ban.player = new User
+							{
+								name = "Offline Player",
+								userid = uid
+							};
 
 							if (Configs.steamAPIKey != string.Empty)
 							{
@@ -145,19 +149,13 @@ namespace SCPDiscord
 
 								if (o2 != null)
 								{
-									name = (string)o2["response"]["players"][0]["personaname"];
+									ban.player.name = (string)o2["response"]["players"][0]["personaname"];
 								}
-
-								ban.player = new User
-								{
-									name = name,
-									userid = uid
-								};
 							}
 
 							BanHandler.IssueBan(new BanDetails()
 							{
-								OriginalName = name,
+								OriginalName = ban.player.name,
 								Id = uid,
 								IssuanceTime = TimeBehaviour.CurrentTimestamp(),
 								Expires = DateTime.UtcNow.AddMinutes((double)min).Ticks,
@@ -185,6 +183,32 @@ namespace SCPDiscord
 						}
 					}
 					EventHandlers.tcp.SendData(ban);
+				}
+				else if (type == "KICK")
+				{
+					string uid = (string)o["user"];
+					if (!uid.Contains("@steam") && !uid.Contains("@discord"))
+					{
+						uid += "@steam";
+					}
+					ReferenceHub player = Player.GetPlayer(uid);
+
+					Kick kick = new Kick
+					{
+						player = null
+					};
+
+					if (player != null)
+					{
+						ServerConsole.Disconnect(player.gameObject, (string)o["reason"]);
+
+						kick.player = new User
+						{
+							name = player.nicknameSync.Network_myNickSync,
+							userid = player.characterClassManager.UserId
+						};
+					}
+					EventHandlers.tcp.SendData(kick);
 				}
 			}
 			catch (Exception x)
