@@ -77,6 +77,7 @@
     <Compile Include="DataObjects\Kick.cs" />
     <Compile Include="DataObjects\Restart.cs" />
     <Compile Include="DataObjects\RoleSync.cs" />
+    <Compile Include="DataObjects\Unban.cs" />
     <Compile Include="DataObjects\Update.cs" />
     <Compile Include="DataObjects\Events\TeamRespawn.cs" />
     <Compile Include="DataObjects\Events\UserId.cs" />

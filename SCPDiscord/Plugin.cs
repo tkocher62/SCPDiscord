@@ -41,12 +41,26 @@ namespace SCPDiscord
 			}
 		}
 
-		public static string reservedSlots = 
+		public static string reservedSlots =
 			Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 			+ Path.DirectorySeparatorChar + "SCP Secret Laboratory"
 			+ Path.DirectorySeparatorChar + "config"
 			+ Path.DirectorySeparatorChar + "global"
 			+ Path.DirectorySeparatorChar + "UserIDReservedSlots.txt";
+
+		public static string useridBans =
+			Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+			+ Path.DirectorySeparatorChar + "SCP Secret Laboratory"
+			+ Path.DirectorySeparatorChar + "config"
+			+ Path.DirectorySeparatorChar + "global"
+			+ Path.DirectorySeparatorChar + "UserIdBans.txt";
+
+		public static string ipBans =
+			Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
+			+ Path.DirectorySeparatorChar + "SCP Secret Laboratory"
+			+ Path.DirectorySeparatorChar + "config"
+			+ Path.DirectorySeparatorChar + "global"
+			+ Path.DirectorySeparatorChar + "IpBans.txt";
 
 		private EventHandlers ev;
 

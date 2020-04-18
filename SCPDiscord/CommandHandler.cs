@@ -210,6 +210,42 @@ namespace SCPDiscord
 					}
 					EventHandlers.tcp.SendData(kick);
 				}
+				else if (type == "UNBAN")
+				{
+					Unban unban = new Unban();
+
+					List<string> ipBans = File.ReadAllLines(Plugin.ipBans).ToList();
+					List<string> userIDBans = File.ReadAllLines(Plugin.useridBans).ToList();
+
+					string id = (string)o["user"];
+					if (!id.Contains("."))
+					{
+						if (!id.Contains("@steam") && !id.Contains("@discord"))
+						{
+							id += "@steam";
+						}
+					}
+					List<string> matchingIPBans = ipBans.FindAll(s => s.Contains(id));
+					List<string> matchingSteamIDBans = userIDBans.FindAll(s => s.Contains(id));
+
+					if (matchingIPBans.Count == 0 && matchingSteamIDBans.Count == 0)
+					{
+						unban.success = false;
+						EventHandlers.tcp.SendData(unban);
+						return;
+					}
+
+					ipBans.RemoveAll(s => s.Contains(id));
+					userIDBans.RemoveAll(s => s.Contains(id));
+
+					foreach (var row in matchingIPBans) userIDBans.RemoveAll(s => s.Contains(row.Split(';').Last()));
+					foreach (var row in matchingSteamIDBans) ipBans.RemoveAll(s => s.Contains(row.Split(';').Last()));
+
+					File.WriteAllLines(Plugin.ipBans, ipBans);
+					File.WriteAllLines(Plugin.useridBans, userIDBans);
+
+					EventHandlers.tcp.SendData(unban);
+				}
 			}
 			catch (Exception x)
 			{
