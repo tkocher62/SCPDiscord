@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace SCPDiscord
 {
-	class EventHandlers
+	partial class EventHandlers
 	{
 		public static Tcp tcp;
 
@@ -64,11 +64,7 @@ namespace SCPDiscord
 			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
 			{
 				eventName = "PlayerJoin",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				}
+				player = HubToUser(ev.Player)
 			});
 		}
 
@@ -83,11 +79,7 @@ namespace SCPDiscord
 				tcp.SendData(new PlayerParam
 				{
 					eventName = "SetClass",
-					player = new User
-					{
-						name = ev.Player.nicknameSync.Network_myNickSync,
-						userid = ev.Player.characterClassManager.UserId
-					},
+					player = HubToUser(ev.Player),
 					param = Conversions.roles[ev.Role]
 				});
 			}
@@ -98,11 +90,7 @@ namespace SCPDiscord
 			tcp.SendData(new PlayerParam
 			{
 				eventName = "DropItem",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				},
+				player = HubToUser(ev.Player),
 				param = Conversions.items[ev.Item.id]
 			});
 		}
@@ -112,11 +100,7 @@ namespace SCPDiscord
 			tcp.SendData(new PlayerParam
 			{
 				eventName = "PickupItem",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				},
+				player = HubToUser(ev.Player),
 				param = Conversions.items[ev.Item.ItemId]
 			});
 		}
@@ -128,11 +112,7 @@ namespace SCPDiscord
 				tcp.SendData(new DataObjects.Events.Player
 				{
 					eventName = "PlayerLeave",
-					player = new User
-					{
-						name = ev.Player.nicknameSync.Network_myNickSync,
-						userid = ev.Player.characterClassManager.UserId
-					}
+					player = HubToUser(ev.Player)
 				});
 			}
 		}
@@ -142,16 +122,8 @@ namespace SCPDiscord
 			tcp.SendData(new PlayerDamage
 			{
 				eventName = "PlayerHurt",
-				victim = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				},
-				attacker = new User
-				{
-					name = ev.Attacker.nicknameSync.Network_myNickSync,
-					userid = ev.Attacker.characterClassManager.UserId
-				},
+				victim = HubToUser(ev.Player),
+				attacker = HubToUser(ev.Attacker),
 				damage = (int)ev.Info.Amount,
 				weapon = ev.Info.GetDamageName().ToString()
 			});
@@ -164,16 +136,8 @@ namespace SCPDiscord
 				PlayerDamage data = new PlayerDamage
 				{
 					eventName = "PlayerDeath",
-					victim = new User
-					{
-						name = ev.Player.nicknameSync.Network_myNickSync,
-						userid = ev.Player.characterClassManager.UserId
-					},
-					attacker = new User
-					{
-						name = ev.Killer.nicknameSync.Network_myNickSync,
-						userid = ev.Killer.characterClassManager.UserId
-					},
+					victim = HubToUser(ev.Player),
+					attacker = HubToUser(ev.Killer),
 					damage = (int)ev.Info.Amount,
 					weapon = ev.Info.GetDamageName().ToString()
 				};
@@ -205,11 +169,7 @@ namespace SCPDiscord
 			tcp.SendData(new PlayerParam
 			{
 				eventName = "GrenadeThrown",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				},
+				player = HubToUser(ev.Player),
 				param = Conversions.grenades[ev.Id]
 			});
 		}
@@ -221,10 +181,10 @@ namespace SCPDiscord
 			tcp.SendData(new Command
 			{
 				eventName = "RACommand",
-				sender = new User
+				sender = ply != null ? HubToUser(ply) : new User
 				{
-					name = ply != null ? ply.nicknameSync.Network_myNickSync : "Server",
-					userid = ply != null ? ply.characterClassManager.UserId : ""
+					name = "Server",
+					userid = ""
 				},
 				command = ev.Command
 			});
@@ -244,11 +204,7 @@ namespace SCPDiscord
 			tcp.SendData(new Command
 			{
 				eventName = "ConsoleCommand",
-				sender = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				},
+				sender = HubToUser(ev.Player),
 				command = ev.Command
 			});
 		}
@@ -286,11 +242,7 @@ namespace SCPDiscord
 			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
 			{
 				eventName = "Scp079TriggerTesla",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				}
+				player = HubToUser(ev.Player)
 			});
 		}
 
@@ -299,11 +251,7 @@ namespace SCPDiscord
 			tcp.SendData(new PlayerParam
 			{
 				eventName = "Scp914ChangeKnob",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				},
+				player = HubToUser(ev.Player),
 				param = Conversions.knobsettings[ev.KnobSetting]
 			});
 		}
@@ -315,11 +263,7 @@ namespace SCPDiscord
 				eventName = "TeamRespawn",
 				players = EXILED.Extensions.Player.GetHubs().Select(x =>
 				{
-					return new User
-					{
-						name = x.nicknameSync.Network_myNickSync,
-						userid = x.characterClassManager.UserId
-					};
+					return HubToUser(x);
 				}).ToArray(),
 				team = ev.IsChaos ? 0 : 1
 			});
@@ -331,11 +275,7 @@ namespace SCPDiscord
 			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "Scp106Contain",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				}
+				player = HubToUser(ev.Player)
 			});
 		}
 
@@ -344,11 +284,7 @@ namespace SCPDiscord
 			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "Scp914Activation",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				}
+				player = HubToUser(ev.Player)
 			});
 		}
 
@@ -357,11 +293,7 @@ namespace SCPDiscord
 			tcp.SendData(new PlayerParam
 			{
 				eventName = "SetGroup",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				},
+				player = HubToUser(ev.Player),
 				param = ev.Group.BadgeText
 			});
 		}
@@ -371,11 +303,7 @@ namespace SCPDiscord
 			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "PocketDimensionEnter",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				}
+				player = HubToUser(ev.Player)
 			});
 		}
 
@@ -384,11 +312,7 @@ namespace SCPDiscord
 			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "PocketDimensionEscape",
-				player = new User
-				{
-					name = ev.Player.nicknameSync.Network_myNickSync,
-					userid = ev.Player.characterClassManager.UserId
-				}
+				player = HubToUser(ev.Player)
 			});
 		}
 	}
