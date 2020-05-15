@@ -80,7 +80,7 @@ namespace SCPDiscord
 				{
 					eventName = "SetClass",
 					player = HubToUser(ev.Player),
-					param = Conversions.roles[ev.Role]
+					param = Conversions.roles.ContainsKey(ev.Role) ? Conversions.roles[ev.Role] : ev.Role.ToString()
 				});
 			}
 		}
@@ -91,7 +91,7 @@ namespace SCPDiscord
 			{
 				eventName = "DropItem",
 				player = HubToUser(ev.Player),
-				param = Conversions.items[ev.Item.id]
+				param = Conversions.items.ContainsKey(ev.Item.id) ? Conversions.items[ev.Item.id] : ev.Item.id.ToString()
 			});
 		}
 
@@ -101,7 +101,7 @@ namespace SCPDiscord
 			{
 				eventName = "PickupItem",
 				player = HubToUser(ev.Player),
-				param = Conversions.items[ev.Item.ItemId]
+				param = Conversions.items.ContainsKey(ev.Item.ItemId) ? Conversions.items[ev.Item.ItemId] : ev.Item.ItemId.ToString()
 			});
 		}
 
