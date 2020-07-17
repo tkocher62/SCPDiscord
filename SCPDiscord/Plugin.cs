@@ -26,7 +26,7 @@ namespace SCPDiscord
 
 		public static void VerifyReservedSlot(string userid)
 		{
-			Log.Debug($"Verifying reserved slots statusfor {userid}...");
+			Log.Debug($"Verifying reserved slots status for {userid}...");
 			List<string> lines = File.ReadAllLines(reservedSlots).ToList();
 			for (int i = 0; i < lines.Count; i++)
 			{
