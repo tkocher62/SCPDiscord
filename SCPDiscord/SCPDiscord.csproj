@@ -33,20 +33,19 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\..\Desktop\References\Assembly-CSharp-firstpass.dll</HintPath>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Desktop\scpsls\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp_publicized">
+    <Reference Include="Assembly-CSharp_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Desktop\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED">
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\EXILED.dll</HintPath>
+    <Reference Include="Exiled.API">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="EXILED_Events">
-      <HintPath>..\..\..\..\AppData\Roaming\Plugins\EXILED_Events.dll</HintPath>
-    </Reference>
-    <Reference Include="EXILED_Permissions">
-      <HintPath>..\..\..\..\AppData\Roaming\Plugins\EXILED_Permissions.dll</HintPath>
+    <Reference Include="Exiled.Events">
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Exiled.Events.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
       <HintPath>..\..\..\..\Desktop\References\Mirror.dll</HintPath>
@@ -90,7 +89,7 @@
     <Compile Include="DataObjects\User.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Methods.cs" />
-    <Compile Include="Plugin.cs" />
+    <Compile Include="SCPDiscord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp.cs" />
   </ItemGroup>

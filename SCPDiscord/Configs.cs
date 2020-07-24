@@ -1,20 +1,15 @@
-﻿namespace SCPDiscord
+﻿using Exiled.API.Interfaces;
+
+namespace SCPDiscord
 {
-	class Configs
+	public class Config : IConfig
 	{
-		internal static string localAdminPath;
-		internal static string serverPrefix;
-		internal static string steamAPIKey;
+		public bool IsEnabled { get; set; } = true;
 
-		internal static int port;
+		public string LocalAdminPath { get; set; } = string.Empty;
+		public string ServerPrefix { get; set; } = string.Empty;
+		public string SteamApiKey { get; set; } = string.Empty;
 
-		internal static void ReloadConfigs()
-		{
-			localAdminPath = Plugin.Config.GetString("scpd_localadmin_path", string.Empty);
-			serverPrefix = Plugin.Config.GetString("scpd_server_prefix", string.Empty);
-			steamAPIKey = Plugin.Config.GetString("scpd_steamapi_key", string.Empty);
-
-			port = Plugin.Config.GetInt("scpd_port", 8080);
-		}
+		public int Port { get; set; } = 8080;
 	}
 }

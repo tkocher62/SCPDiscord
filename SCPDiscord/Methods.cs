@@ -4,12 +4,12 @@ namespace SCPDiscord
 {
 	partial class EventHandlers
 	{
-		private User HubToUser(ReferenceHub hub)
+		private User PlyToUser(Exiled.API.Features.Player player)
 		{
 			return new User
 			{
-				name = hub.nicknameSync.Network_myNickSync,
-				userid = hub.characterClassManager.UserId
+				name = player.Nickname,
+				userid = player.UserId
 			};
 		}
 	}

@@ -1,6 +1,7 @@
-﻿using EXILED;
+﻿using Exiled.API.Features;
+using Exiled.Events;
 using MEC;
-using EXILED.Extensions;
+using Exiled.Events.EventArgs;
 using SCPDiscord.DataObjects;
 using SCPDiscord.DataObjects.Events;
 using System.Linq;
@@ -14,19 +15,19 @@ namespace SCPDiscord
 
 		private static bool silentRestart;
 
-		private Dictionary<ReferenceHub, RoleType> roles = new Dictionary<ReferenceHub, RoleType>();
+		private Dictionary<Exiled.API.Features.Player, RoleType> roles = new Dictionary<Exiled.API.Features.Player, RoleType>();
 
 		public EventHandlers()
 		{
-			Configs.ReloadConfigs();
+			//Configs.ReloadConfigs();
 
-			tcp = new Tcp("127.0.0.1", Configs.port);
+			tcp = new Tcp("127.0.0.1", SCPDiscord.plugin.Config.Port);
 			tcp.Init();
 		}
 
 		public void OnWaitingForPlayers()
 		{
-			Configs.ReloadConfigs();
+			//Configs.ReloadConfigs();
 
 			tcp.SendData(new Generic
 			{
@@ -41,108 +42,108 @@ namespace SCPDiscord
 			tcp.SendData(new Generic
 			{
 				eventName = "RoundStart",
-				param = EXILED.Extensions.Player.GetHubs().Where(x => x.characterClassManager.UserId != null).Count().ToString()
+				param = Exiled.API.Features.Player.List.Where(x => x.UserId != null).Count().ToString()
 			});
 		}
 
-		public void OnRoundEnd()
+		public void OnRoundEnd(RoundEndedEventArgs ev)
 		{
 			tcp.SendData(new Generic
 			{
 				eventName = "RoundEnd",
-				param = ((int)(EventPlugin.GetRoundDuration() / 60)).ToString()
+				param = ((int)(Round.ElapsedTime.TotalSeconds / 60)).ToString()
 			});
 		}
 
-		public void OnPlayerJoin(PlayerJoinEvent ev)
+		public void OnPlayerJoin(JoinedEventArgs ev)
 		{
 			Timing.CallDelayed(1f, () => tcp.SendData(new RoleSync
 			{
-				userid = ev.Player.characterClassManager.UserId
+				userid = ev.Player.UserId
 			}));
 
-			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
+			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "PlayerJoin",
-				player = HubToUser(ev.Player)
+				player = PlyToUser(ev.Player)
 			});
 		}
 
-		public void OnSetClass(SetClassEvent ev)
+		public void OnSetClass(ChangingRoleEventArgs ev)
 		{
 			if (!roles.ContainsKey(ev.Player)) roles.Add(ev.Player, RoleType.None);
-			if (roles[ev.Player] == ev.Role || ev.Role == RoleType.Spectator) return;
-			roles[ev.Player] = ev.Role;
+			if (roles[ev.Player] == ev.NewRole || ev.NewRole == RoleType.Spectator) return;
+			roles[ev.Player] = ev.NewRole;
 
-			if (ev.Player.characterClassManager.UserId != null)
+			if (ev.Player.UserId != null)
 			{
 				tcp.SendData(new PlayerParam
 				{
 					eventName = "SetClass",
-					player = HubToUser(ev.Player),
-					param = Conversions.roles.ContainsKey(ev.Role) ? Conversions.roles[ev.Role] : ev.Role.ToString()
+					player = PlyToUser(ev.Player),
+					param = Conversions.roles.ContainsKey(ev.NewRole) ? Conversions.roles[ev.NewRole] : ev.NewRole.ToString()
 				});
 			}
 		}
 
-		public void OnDropItem(ref DropItemEvent ev)
+		public void OnDropItem(DroppingItemEventArgs ev)
 		{
 			tcp.SendData(new PlayerParam
 			{
 				eventName = "DropItem",
-				player = HubToUser(ev.Player),
+				player = PlyToUser(ev.Player),
 				param = Conversions.items.ContainsKey(ev.Item.id) ? Conversions.items[ev.Item.id] : ev.Item.id.ToString()
 			});
 		}
 
-		public void OnPickupItem(ref PickupItemEvent ev)
+		public void OnPickupItem(PickingUpItemEventArgs ev)
 		{
 			tcp.SendData(new PlayerParam
 			{
 				eventName = "PickupItem",
-				player = HubToUser(ev.Player),
-				param = Conversions.items.ContainsKey(ev.Item.ItemId) ? Conversions.items[ev.Item.ItemId] : ev.Item.ItemId.ToString()
+				player = PlyToUser(ev.Player),
+				param = Conversions.items.ContainsKey(ev.Pickup.ItemId) ? Conversions.items[ev.Pickup.ItemId] : ev.Pickup.ItemId.ToString()
 			});
 		}
 
-		public void OnPlayerLeave(PlayerLeaveEvent ev)
+		public void OnPlayerLeave(LeftEventArgs ev)
 		{
-			if (ev.Player.characterClassManager.UserId != null)
+			if (ev.Player.UserId != null)
 			{
 				tcp.SendData(new DataObjects.Events.Player
 				{
 					eventName = "PlayerLeave",
-					player = HubToUser(ev.Player)
+					player = PlyToUser(ev.Player)
 				});
 			}
 		}
 
-		public void OnPlayerHurt(ref PlayerHurtEvent ev)
+		public void OnPlayerHurt(HurtingEventArgs ev)
 		{
 			tcp.SendData(new PlayerDamage
 			{
 				eventName = "PlayerHurt",
-				victim = HubToUser(ev.Player),
-				attacker = HubToUser(ev.Attacker),
-				damage = (int)ev.Info.Amount,
-				weapon = ev.Info.GetDamageName().ToString()
+				victim = PlyToUser(ev.Target),
+				attacker = PlyToUser(ev.Attacker),
+				damage = (int)ev.Amount,
+				weapon = ev.DamageType.ToString()
 			});
 		}
 
-		public void OnPlayerDeath(ref PlayerDeathEvent ev)
+		public void OnPlayerDeath(DyingEventArgs ev)
 		{
-			if (ev.Player.GetRole() != RoleType.Spectator)
+			if (ev.Target.Role != RoleType.Spectator)
 			{
 				PlayerDamage data = new PlayerDamage
 				{
 					eventName = "PlayerDeath",
-					victim = HubToUser(ev.Player),
-					attacker = HubToUser(ev.Killer),
-					damage = (int)ev.Info.Amount,
-					weapon = ev.Info.GetDamageName().ToString()
+					victim = PlyToUser(ev.Target),
+					attacker = PlyToUser(ev.Killer),
+					damage = (int)ev.HitInformation.Amount,
+					weapon = ev.HitInformation.GetDamageName().ToString()
 				};
 
-				DamageTypes.DamageType type = ev.Info.GetDamageType();
+				DamageTypes.DamageType type = ev.HitInformation.GetDamageType();
 				if (type == DamageTypes.Tesla) data.eventName += "Tesla";
 				else if (type == DamageTypes.Decont) data.eventName += "Decont";
 				else if (type == DamageTypes.Falldown) data.eventName += "Fall";
@@ -156,7 +157,7 @@ namespace SCPDiscord
 			}
 		}
 
-		public void OnDecontamination(ref DecontaminationEvent ev)
+		public void OnDecontamination(DecontaminatingEventArgs ev)
 		{
 			tcp.SendData(new Generic
 			{
@@ -164,52 +165,50 @@ namespace SCPDiscord
 			});
 		}
 
-		public void OnGrenadeThrown(ref GrenadeThrownEvent ev)
+		public void OnGrenadeThrown(ThrowingGrenadeEventArgs ev)
 		{
 			tcp.SendData(new PlayerParam
 			{
 				eventName = "GrenadeThrown",
-				player = HubToUser(ev.Player),
+				player = PlyToUser(ev.Player),
 				param = Conversions.grenades[ev.Id]
 			});
 		}
 
-		public void OnRACommand(ref RACommandEvent ev)
+		public void OnRACommand(SendingRemoteAdminCommandEventArgs ev)
 		{
-			ReferenceHub ply = EXILED.Extensions.Player.GetPlayer(ev.Sender.SenderId);
-
 			tcp.SendData(new Command
 			{
 				eventName = "RACommand",
-				sender = ply != null ? HubToUser(ply) : new User
+				sender = ev.Sender != null ? PlyToUser(ev.Sender) : new User
 				{
 					name = "Server",
 					userid = ""
 				},
-				command = ev.Command
+				command = ev.Arguments.ToString()
 			});
 
-			string cmd = ev.Command.ToLower();
+			/*string cmd = ev.Command.ToLower();
 
-			if ((cmd == "silentrestart" || cmd == "sr") && ply.CheckPermission("scpd.sr"))
+			if ((cmd == "silentrestart" || cmd == "sr") && ev.Sender.CheckPermission("scpd.sr"))
 			{
 				ev.Allow = false;
 				silentRestart = !silentRestart;
 				ev.Sender.RAMessage(silentRestart ? "Server set to silently restart next round." : "Server silent restart cancelled.", true);
-			}
+			}*/
 		}
 
-		public void OnConsoleCommand(ConsoleCommandEvent ev)
+		public void OnConsoleCommand(SendingConsoleCommandEventArgs ev)
 		{
 			tcp.SendData(new Command
 			{
 				eventName = "ConsoleCommand",
-				sender = HubToUser(ev.Player),
-				command = ev.Command
+				sender = PlyToUser(ev.Player),
+				command = ev.Arguments.ToString()
 			});
 		}
 
-		public void OnPreAuth(ref PreauthEvent ev)
+		public void OnPreAuth(PreAuthenticatingEventArgs ev)
 		{
 			string remote = ev.Request.RemoteEndPoint.ToString();
 			tcp.SendData(new UserId
@@ -227,7 +226,7 @@ namespace SCPDiscord
 				eventName = "RoundRestart"
 			});
 
-			if (silentRestart && Configs.localAdminPath != string.Empty && Configs.serverPrefix != string.Empty)
+			if (silentRestart && SCPDiscord.plugin.Config.LocalAdminPath != string.Empty && SCPDiscord.plugin.Config.ServerPrefix != string.Empty)
 			{
 				Timing.CallDelayed(2.5f, () =>
 				{
@@ -237,82 +236,82 @@ namespace SCPDiscord
 			}
 		}
 
-		public void OnScp079TriggerTesla(ref Scp079TriggerTeslaEvent ev)
+		public void OnScp079TriggerTesla(InteractingTeslaEventArgs ev)
 		{
-			tcp.SendData(new SCPDiscord.DataObjects.Events.Player
+			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "Scp079TriggerTesla",
-				player = HubToUser(ev.Player)
+				player = PlyToUser(ev.Player)
 			});
 		}
 
-		public void OnScp914ChangeKnob(ref Scp914KnobChangeEvent ev)
+		public void OnScp914ChangeKnob(ChangingKnobSettingEventArgs ev)
 		{
 			tcp.SendData(new PlayerParam
 			{
 				eventName = "Scp914ChangeKnob",
-				player = HubToUser(ev.Player),
+				player = PlyToUser(ev.Player),
 				param = Conversions.knobsettings[ev.KnobSetting]
 			});
 		}
 
-		public void OnTeamRespawn(ref TeamRespawnEvent ev)
+		public void OnTeamRespawn(RespawningTeamEventArgs ev)
 		{
 			tcp.SendData(new TeamRespawn
 			{
 				eventName = "TeamRespawn",
-				players = EXILED.Extensions.Player.GetHubs().Select(x =>
+				players = Exiled.API.Features.Player.List.Select(x =>
 				{
-					return HubToUser(x);
+					return PlyToUser(x);
 				}).ToArray(),
-				team = ev.IsChaos ? 0 : 1
+				team = ev.NextKnownTeam == Respawning.SpawnableTeamType.ChaosInsurgency ? 0 : 1
 			});
 		}
 
-		public void OnScp106Contain(Scp106ContainEvent ev)
+		public void OnScp106Contain(ContainingEventArgs ev)
 		{
 			// 'player' is the player who hit the button, not 106
 			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "Scp106Contain",
-				player = HubToUser(ev.Player)
+				player = PlyToUser(ev.Player)
 			});
 		}
 
-		public void OnScp914Activation(ref Scp914ActivationEvent ev)
+		public void OnScp914Activation(ActivatingEventArgs ev)
 		{
 			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "Scp914Activation",
-				player = HubToUser(ev.Player)
+				player = PlyToUser(ev.Player)
 			});
 		}
 
-		public void OnSetGroup(SetGroupEvent ev)
+		public void OnSetGroup(ChangingGroupEventArgs ev)
 		{
 			tcp.SendData(new PlayerParam
 			{
 				eventName = "SetGroup",
-				player = HubToUser(ev.Player),
-				param = ev.Group.BadgeText
+				player = PlyToUser(ev.Player),
+				param = ev.NewGroup.BadgeText
 			});
 		}
 
-		public void OnPocketDimensionEnter(PocketDimEnterEvent ev)
+		public void OnPocketDimensionEnter(EnteringPocketDimensionEventArgs ev)
 		{
 			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "PocketDimensionEnter",
-				player = HubToUser(ev.Player)
+				player = PlyToUser(ev.Player)
 			});
 		}
 
-		public void OnPocketDimensionEscape(PocketDimEscapedEvent ev)
+		public void OnPocketDimensionEscape(EscapingPocketDimensionEventArgs ev)
 		{
 			tcp.SendData(new DataObjects.Events.Player
 			{
 				eventName = "PocketDimensionEscape",
-				player = HubToUser(ev.Player)
+				player = PlyToUser(ev.Player)
 			});
 		}
 	}

@@ -1,4 +1,4 @@
-﻿using EXILED.Extensions;
+﻿using Exiled.API.Features;
 using System.Linq;
 
 namespace SCPDiscord.DataObjects
@@ -6,6 +6,6 @@ namespace SCPDiscord.DataObjects
 	public class Update
 	{
 		public string type = "UPDATE";
-		public int playerCount = Player.GetHubs().Count();
+		public int playerCount = Player.List.Count();
 	}
 }

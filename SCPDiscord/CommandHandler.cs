@@ -1,5 +1,4 @@
-﻿using EXILED;
-using EXILED.Extensions;
+﻿using Exiled.API.Features;
 using Newtonsoft.Json.Linq;
 using SCPDiscord.DataObjects;
 using System;
@@ -35,7 +34,7 @@ namespace SCPDiscord
 					if (o["group"] == null)
 					{
 						Log.Debug($"No role sync found for {userid}");
-						Plugin.VerifyReservedSlot(userid);
+						SCPDiscord.VerifyReservedSlot(userid);
 						return;
 					}
 
@@ -48,28 +47,28 @@ namespace SCPDiscord
 						return;
 					}
 
-					ReferenceHub player = Player.GetPlayer(userid);
+					Player player = Player.Get(userid);
 					if (player == null)
 					{
 						Log.Error($"Error assigning user group to {userid}, player not found.");
 						return;
 					}
 
-					if (Plugin.setRoleGroups.Contains(group))
+					if (SCPDiscord.setRoleGroups.Contains(group))
 					{
 						Log.Debug($"Assigning role: {userGroup} to {userid}.");
-						player.serverRoles.SetGroup(userGroup, false);
+						player.Group = userGroup;
 					}
-					if (Plugin.reservedSlotGroups.Contains(group))
+					if (SCPDiscord.reservedSlotGroups.Contains(group))
 					{
 						// grant reserved slot
 						Log.Debug("Player has necessary rank for reserved slot, checking...");
-						List<string> lines = File.ReadAllLines(Plugin.reservedSlots).ToList();
+						List<string> lines = File.ReadAllLines(SCPDiscord.reservedSlots).ToList();
 						if (!lines.Contains(userid))
 						{
 							Log.Debug("Reserved slot not found, adding player...");
 							lines.Add(userid);
-							File.WriteAllLines(Plugin.reservedSlots, lines);
+							File.WriteAllLines(SCPDiscord.reservedSlots, lines);
 							// This only reloads the slots on the current server, change this to reload on every server?
 							// Might not work
 							ReservedSlot.Reload();
@@ -77,7 +76,7 @@ namespace SCPDiscord
 					}
 					else
 					{
-						Plugin.VerifyReservedSlot(userid);
+						SCPDiscord.VerifyReservedSlot(userid);
 					}
 				}
 				else if (type == "COMMAND")
@@ -100,7 +99,7 @@ namespace SCPDiscord
 					{
 						isuid = true;
 					}
-					ReferenceHub player = Player.GetPlayer(uid);
+					Player player = Player.Get(uid);
 					int min = (int)o["min"];
 					string reason = (string)o["reason"];
 
@@ -114,12 +113,12 @@ namespace SCPDiscord
 
 					if (player != null)
 					{
-						PlayerManager.localPlayer.GetComponent<BanPlayer>().BanUser(player.gameObject, min, reason, "Server");
+						PlayerManager.localPlayer.GetComponent<BanPlayer>().BanUser(player.GameObject, min, reason, "Server");
 
 						ban.player = new User
 						{
-							name = player.nicknameSync.Network_myNickSync,
-							userid = player.characterClassManager.UserId
+							name = player.Nickname,
+							userid = player.UserId
 						};
 					}
 					else
@@ -134,12 +133,12 @@ namespace SCPDiscord
 								userid = uid
 							};
 
-							if (Configs.steamAPIKey != string.Empty)
+							if (SCPDiscord.plugin.Config.SteamApiKey != string.Empty)
 							{
 								string data = null;
 								try
 								{
-									data = webclient.DownloadString($"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={Configs.steamAPIKey}&format=json&steamids={uid.Replace("@steam", "")}");
+									data = webclient.DownloadString($"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={SCPDiscord.plugin.Config.SteamApiKey}&format=json&steamids={uid.Replace("@steam", "")}");
 								}
 								catch
 								{
@@ -191,7 +190,7 @@ namespace SCPDiscord
 					{
 						uid += "@steam";
 					}
-					ReferenceHub player = Player.GetPlayer(uid);
+					Player player = Player.Get(uid);
 
 					Kick kick = new Kick
 					{
@@ -202,11 +201,11 @@ namespace SCPDiscord
 					{
 						kick.player = new User
 						{
-							name = player.nicknameSync.Network_myNickSync,
-							userid = player.characterClassManager.UserId
+							name = player.Nickname,
+							userid = player.UserId
 						};
 
-						ServerConsole.Disconnect(player.gameObject, (string)o["reason"]);
+						ServerConsole.Disconnect(player.GameObject, (string)o["reason"]);
 					}
 					EventHandlers.tcp.SendData(kick);
 				}
@@ -214,8 +213,8 @@ namespace SCPDiscord
 				{
 					Unban unban = new Unban();
 
-					List<string> ipBans = File.ReadAllLines(Plugin.ipBans).ToList();
-					List<string> userIDBans = File.ReadAllLines(Plugin.useridBans).ToList();
+					List<string> ipBans = File.ReadAllLines(SCPDiscord.ipBans).ToList();
+					List<string> userIDBans = File.ReadAllLines(SCPDiscord.useridBans).ToList();
 
 					string id = (string)o["user"];
 					if (!id.Contains("."))
@@ -241,8 +240,8 @@ namespace SCPDiscord
 					foreach (var row in matchingIPBans) userIDBans.RemoveAll(s => s.Contains(row.Split(';').Last()));
 					foreach (var row in matchingSteamIDBans) ipBans.RemoveAll(s => s.Contains(row.Split(';').Last()));
 
-					File.WriteAllLines(Plugin.ipBans, ipBans);
-					File.WriteAllLines(Plugin.useridBans, userIDBans);
+					File.WriteAllLines(SCPDiscord.ipBans, ipBans);
+					File.WriteAllLines(SCPDiscord.useridBans, userIDBans);
 
 					EventHandlers.tcp.SendData(unban);
 				}
