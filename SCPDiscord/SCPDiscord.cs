@@ -1,6 +1,4 @@
-﻿using Exiled.API;
-using Exiled.API.Features;
-using Exiled.Events;
+﻿using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using System.IO;

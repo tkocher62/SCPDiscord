@@ -1,5 +1,4 @@
 ﻿using Exiled.API.Features;
-using Exiled.Events;
 using MEC;
 using Exiled.Events.EventArgs;
 using SCPDiscord.DataObjects;
