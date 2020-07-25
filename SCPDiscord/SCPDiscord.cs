@@ -58,6 +58,8 @@ namespace SCPDiscord
 		{
 			base.OnEnabled();
 
+			if (!Config.IsEnabled) return;
+
 			plugin = this;
 			ev = new EventHandlers();
 
