@@ -133,12 +133,12 @@ namespace SCPDiscord
 								userid = uid
 							};
 
-							if (SCPDiscord.plugin.Config.SteamApiKey != string.Empty)
+							if (SCPDiscord.instance.Config.SteamApiKey != string.Empty)
 							{
 								string data = null;
 								try
 								{
-									data = webclient.DownloadString($"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={SCPDiscord.plugin.Config.SteamApiKey}&format=json&steamids={uid.Replace("@steam", "")}");
+									data = webclient.DownloadString($"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={SCPDiscord.instance.Config.SteamApiKey}&format=json&steamids={uid.Replace("@steam", "")}");
 								}
 								catch
 								{

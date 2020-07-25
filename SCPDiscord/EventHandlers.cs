@@ -20,7 +20,7 @@ namespace SCPDiscord
 		{
 			//Configs.ReloadConfigs();
 
-			tcp = new Tcp("127.0.0.1", SCPDiscord.plugin.Config.Port);
+			tcp = new Tcp("127.0.0.1", SCPDiscord.instance.Config.Port);
 			tcp.Init();
 		}
 
@@ -176,6 +176,8 @@ namespace SCPDiscord
 
 		public void OnRACommand(SendingRemoteAdminCommandEventArgs ev)
 		{
+			string cmd = ev.Name;
+			foreach (string arg in ev.Arguments) cmd += $" {arg}";
 			tcp.SendData(new Command
 			{
 				eventName = "RACommand",
@@ -184,7 +186,7 @@ namespace SCPDiscord
 					name = "Server",
 					userid = ""
 				},
-				command = ev.Arguments.ToString()
+				command = cmd
 			});
 
 			/*string cmd = ev.Command.ToLower();
@@ -199,11 +201,13 @@ namespace SCPDiscord
 
 		public void OnConsoleCommand(SendingConsoleCommandEventArgs ev)
 		{
+			string cmd = ev.Name;
+			foreach (string arg in ev.Arguments) cmd += $" {arg}";
 			tcp.SendData(new Command
 			{
 				eventName = "ConsoleCommand",
 				sender = PlyToUser(ev.Player),
-				command = ev.Arguments.ToString()
+				command = cmd
 			});
 		}
 
@@ -225,7 +229,7 @@ namespace SCPDiscord
 				eventName = "RoundRestart"
 			});
 
-			if (silentRestart && SCPDiscord.plugin.Config.LocalAdminPath != string.Empty && SCPDiscord.plugin.Config.ServerPrefix != string.Empty)
+			if (silentRestart && SCPDiscord.instance.Config.LocalAdminPath != string.Empty && SCPDiscord.instance.Config.ServerPrefix != string.Empty)
 			{
 				Timing.CallDelayed(2.5f, () =>
 				{

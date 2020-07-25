@@ -50,7 +50,7 @@ namespace SCPDiscord
 		public static string useridBans = basePath + Path.DirectorySeparatorChar + "UserIdBans.txt";
 		public static string ipBans = basePath + Path.DirectorySeparatorChar + "IpBans.txt";
 
-		public static SCPDiscord plugin;
+		public static SCPDiscord instance;
 
 		private EventHandlers ev;
 
@@ -60,7 +60,7 @@ namespace SCPDiscord
 
 			if (!Config.IsEnabled) return;
 
-			plugin = this;
+			instance = this;
 			ev = new EventHandlers();
 
 			Exiled.Events.Handlers.Server.WaitingForPlayers += ev.OnWaitingForPlayers;
