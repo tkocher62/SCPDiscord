@@ -79,7 +79,7 @@ namespace SCPDiscord
 			Exiled.Events.Handlers.Player.PickingUpItem += ev.OnPickupItem;
 			Exiled.Events.Handlers.Player.Left += ev.OnPlayerLeave;
 			Exiled.Events.Handlers.Player.Hurting += ev.OnPlayerHurt;
-			Exiled.Events.Handlers.Player.Dying += ev.OnPlayerDeath;
+			Exiled.Events.Handlers.Player.Died += ev.OnPlayerDeath;
 			Exiled.Events.Handlers.Player.PreAuthenticating += ev.OnPreAuth;
 			Exiled.Events.Handlers.Player.ThrowingGrenade += ev.OnGrenadeThrown;
 			Exiled.Events.Handlers.Player.ChangingGroup += ev.OnSetGroup;
@@ -114,7 +114,7 @@ namespace SCPDiscord
 			Exiled.Events.Handlers.Player.PickingUpItem -= ev.OnPickupItem;
 			Exiled.Events.Handlers.Player.Left -= ev.OnPlayerLeave;
 			Exiled.Events.Handlers.Player.Hurting -= ev.OnPlayerHurt;
-			Exiled.Events.Handlers.Player.Dying -= ev.OnPlayerDeath;
+			Exiled.Events.Handlers.Player.Died -= ev.OnPlayerDeath;
 			Exiled.Events.Handlers.Player.PreAuthenticating -= ev.OnPreAuth;
 			Exiled.Events.Handlers.Player.ThrowingGrenade -= ev.OnGrenadeThrown;
 			Exiled.Events.Handlers.Player.ChangingGroup -= ev.OnSetGroup;

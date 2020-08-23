@@ -129,7 +129,7 @@ namespace SCPDiscord
 			});
 		}
 
-		public void OnPlayerDeath(DyingEventArgs ev)
+		public void OnPlayerDeath(DiedEventArgs ev)
 		{
 			if (ev.Target.Role != RoleType.Spectator)
 			{
@@ -138,11 +138,11 @@ namespace SCPDiscord
 					eventName = "PlayerDeath",
 					victim = PlyToUser(ev.Target),
 					attacker = PlyToUser(ev.Killer),
-					damage = (int)ev.HitInformation.Amount,
-					weapon = ev.HitInformation.GetDamageName().ToString()
+					damage = (int)ev.HitInformations.Amount,
+					weapon = ev.HitInformations.GetDamageName().ToString()
 				};
 
-				DamageTypes.DamageType type = ev.HitInformation.GetDamageType();
+				DamageTypes.DamageType type = ev.HitInformations.GetDamageType();
 				if (type == DamageTypes.Tesla) data.eventName += "Tesla";
 				else if (type == DamageTypes.Decont) data.eventName += "Decont";
 				else if (type == DamageTypes.Falldown) data.eventName += "Fall";
@@ -213,12 +213,12 @@ namespace SCPDiscord
 
 		public void OnPreAuth(PreAuthenticatingEventArgs ev)
 		{
-			string remote = ev.Request.RemoteEndPoint.ToString();
+			//string remote = ev.Request.RemoteEndPoint.ToString();
 			tcp.SendData(new UserId
 			{
 				eventName = "PreAuth",
 				userid = ev.UserId,
-				ip = remote.Substring(0, remote.IndexOf(":"))
+				ip = "[OUT OF ORDER]"//remote.Substring(0, remote.IndexOf(":"))
 			});
 		}
 
