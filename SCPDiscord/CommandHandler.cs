@@ -59,6 +59,14 @@ namespace SCPDiscord
 						Log.Debug($"Assigning role: {userGroup} to {userid}.");
 						player.Group = userGroup;
 					}
+
+					string tag = (string)o["tag"];
+					if (SCPDiscord.setTagGroups.Contains(group) && tag != null)
+					{
+						Log.Debug($"Changing tag of {userid} to {tag}.");
+						player.RankName = tag;
+					}
+
 					if (SCPDiscord.reservedSlotGroups.Contains(group))
 					{
 						// grant reserved slot

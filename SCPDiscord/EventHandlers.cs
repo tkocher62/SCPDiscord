@@ -213,12 +213,11 @@ namespace SCPDiscord
 
 		public void OnPreAuth(PreAuthenticatingEventArgs ev)
 		{
-			//string remote = ev.Request.RemoteEndPoint.ToString();
 			tcp.SendData(new UserId
 			{
 				eventName = "PreAuth",
 				userid = ev.UserId,
-				ip = "[OUT OF ORDER]"//remote.Substring(0, remote.IndexOf(":"))
+				ip = ev.Request.RemoteEndPoint.ToString()
 			});
 		}
 

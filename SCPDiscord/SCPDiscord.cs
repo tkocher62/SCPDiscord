@@ -12,7 +12,19 @@ namespace SCPDiscord
 		{
 			"patron1",
 			"patron2",
-			"patron3"
+			"patron3",
+			"patron4",
+			"patron5",
+			"patron6",
+			"patron7"
+		};
+
+		public static List<string> setTagGroups = new List<string>()
+		{
+			"patron4",
+			"patron5",
+			"patron6",
+			"patron7"
 		};
 
 		public static List<string> reservedSlotGroups = new List<string>()
