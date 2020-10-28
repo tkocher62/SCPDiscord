@@ -8,6 +8,6 @@ namespace SCPDiscord.DataObjects.Events
 		public string eventName;
 		public string time = DateTime.Now.ToString("HH:mm:ss");
 		public User player;
-		public string param;
+		public object param;
 	}
 }

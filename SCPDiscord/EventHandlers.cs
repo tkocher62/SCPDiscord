@@ -61,10 +61,11 @@ namespace SCPDiscord
 				userid = ev.Player.UserId
 			}));
 
-			tcp.SendData(new DataObjects.Events.Player
+			tcp.SendData(new PlayerParam
 			{
 				eventName = "PlayerJoin",
-				player = PlyToUser(ev.Player)
+				player = PlyToUser(ev.Player),
+				param = ev.Player.DoNotTrack
 			});
 		}
 
@@ -170,7 +171,7 @@ namespace SCPDiscord
 			{
 				eventName = "GrenadeThrown",
 				player = PlyToUser(ev.Player),
-				param = Conversions.grenades[ev.Id]
+				param = Conversions.grenades[ev.Type]
 			});
 		}
 
@@ -291,12 +292,15 @@ namespace SCPDiscord
 
 		public void OnSetGroup(ChangingGroupEventArgs ev)
 		{
-			tcp.SendData(new PlayerParam
+			if (ev.Player != null)
+			{
+							tcp.SendData(new PlayerParam
 			{
 				eventName = "SetGroup",
 				player = PlyToUser(ev.Player),
 				param = ev.NewGroup.BadgeText
 			});
+			}
 		}
 
 		public void OnPocketDimensionEnter(EnteringPocketDimensionEventArgs ev)

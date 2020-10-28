@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Exiled.API.Enums;
+using System.Collections.Generic;
 
 namespace SCPDiscord
 {
@@ -55,11 +56,11 @@ namespace SCPDiscord
 			{ RoleType.Scp93989, "SCP-939" }
 		};
 
-		public static Dictionary<int, string> grenades = new Dictionary<int, string>()
+		public static Dictionary<GrenadeType, string> grenades = new Dictionary<GrenadeType, string>()
 		{
-			{ 0, "Granade" },
-			{ 1, "Flashbang" },
-			{ 2, "SCP-018" }
+			{ GrenadeType.FragGrenade, "Granade" },
+			{ GrenadeType.Flashbang, "Flashbang" },
+			{ GrenadeType.Scp018, "SCP-018" }
 		};
 
 		public static Dictionary<Scp914.Scp914Knob, string> knobsettings = new Dictionary<Scp914.Scp914Knob, string>()

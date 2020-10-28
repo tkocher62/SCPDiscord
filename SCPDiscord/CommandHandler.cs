@@ -29,6 +29,8 @@ namespace SCPDiscord
 				}
 				else if (type == "ROLESYNC")
 				{
+					Log.Warn(o);
+
 					string userid = (string)o["userid"];
 
 					if (o["group"] == null)
