@@ -27,7 +27,7 @@ Then, when players join the server, they will be granted the role corresponding 
 ![](https://github.com/tkocher62/SCPDiscord/blob/master/ingamesync.png)
 
 ### Remote Command Execution
-Authorized users have permission to execute in game comands through the Discord server.
+Authorized users have permission to execute in game commands through the Discord server.
 
 ![](https://github.com/tkocher62/SCPDiscord/blob/master/requestkick.png)
 
